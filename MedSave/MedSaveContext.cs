@@ -94,5 +94,48 @@ public class MedSaveContext : DbContext
                 .HasForeignKey<AddressManufacturer>(e => e.NeighId)
                 .HasConstraintName("FK_NEIGHBOURHOOD_ADDRESS_MANUFACTURER");
         });
+
+        modelBuilder.Entity<AddressStock>(entity =>
+        {
+            entity.ToTable("ADDRESS_STOCK");
+
+            entity.HasKey(e => e.AddressIdStock)
+                .HasName("PK_ADDRESS_STOCK");
+
+            entity.Property(e => e.AddressIdStock)
+                .HasColumnName("ADDRESS_ID_STOCK")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Complement)
+                .HasColumnName("COMPLEMENT")
+                .HasColumnType("VARCHAR2(255)");
+
+            entity.Property(e => e.Number)
+                .HasColumnName("NUMBER")
+                .HasColumnType("NUMBER(7)")
+                .IsRequired();
+
+            entity.Property(e => e.Description)
+                .HasColumnName("DESCRIPTION")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
+
+            entity.Property(e => e.Cep)
+                .HasColumnName("CEP")
+                .HasColumnType("NUMBER(8)")
+                .IsRequired();
+
+            entity.Property(e => e.NeighId)
+                .HasColumnName("NEIGH_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.Neighbourhood)
+                .WithOne()
+                .HasForeignKey<AddressStock>(e => e.NeighId)
+                .HasConstraintName("FK_NEIGHBOURHOOD_ADDRESS_STOCK");
+        });
+
     }
 }
