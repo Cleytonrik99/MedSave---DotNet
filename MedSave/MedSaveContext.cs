@@ -137,5 +137,92 @@ public class MedSaveContext : DbContext
                 .HasConstraintName("FK_NEIGHBOURHOOD_ADDRESS_STOCK");
         });
 
+        modelBuilder.Entity<Batch>(entity =>
+        {
+            entity.ToTable("BATCH");
+
+            entity.HasKey(e => e.BatchId)
+                .HasName("PK_BATCH");
+
+            entity.Property(e => e.BatchId)
+                .HasColumnName("BATCH_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.CurrentQuantity)
+                .HasColumnName("CURRENT_QUANTITY")
+                .HasColumnType("NUMERIC")
+                .IsRequired();
+
+            entity.Property(e => e.ManufacturingDate)
+                .HasColumnName("MANUFACTURING_DATE")
+                .HasColumnType("DATE")
+                .IsRequired();
+            
+            entity.Property(e => e.ExpirationDate)
+                .HasColumnName("EXPIRATION_DATE")
+                .HasColumnType("DATE")
+                .IsRequired();
+
+            entity.Property(e => e.ManufacId)
+                .HasColumnName("MANUFAC_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.Manufacturer)
+                .WithOne()
+                .HasForeignKey<Batch>(e => e.ManufacId)
+                .HasConstraintName("FK_MANUFACTURER_BATCH");
+        });
+
+        modelBuilder.Entity<CategoryMedicine>(entity =>
+        {
+            entity.ToTable("CATEGORY_MEDICINE");
+
+            entity.HasKey(e => e.CategoryMedId)
+                .HasName("PK_CATEGORY_MEDICINE");
+
+            entity.Property(e => e.CategoryMedId)
+                .HasColumnName("CATEGORY_MED_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Category)
+                .HasColumnName("CATEGORY")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<City>(entity =>
+        {
+            entity.ToTable("CITY");
+
+            entity.HasKey(e => e.CityId)
+                .HasName("PK_CITY");
+
+            entity.Property(e => e.CityId)
+                .HasColumnName("CITY_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.NameCity)
+                .HasColumnName("NAME_CITY")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
+        });
+
+        /*
+         1:1
+         entity.Property(e => e.NeighId)
+                .HasColumnName("NEIGH_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.Neighbourhood)
+                .WithOne()
+                .HasForeignKey<AddressStock>(e => e.NeighId)
+                .HasConstraintName("FK_NEIGHBOURHOOD_ADDRESS_STOCK");
+         */
+
     }
 }
