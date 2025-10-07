@@ -17,7 +17,4 @@ public class Medicines
     
     public long ActIngreId { get; set; }
     public ActiveIngredient ActiveIngredient { get; set; }
-    
-    public long ManufacId { get; set; }
-    public Manufacturer Manufacturer { get; set; }
 }

@@ -1,10 +1,11 @@
 ﻿namespace MedSave.Model;
 
-public class Address
+public class AddressManufacturer
 {
-    public long AddressId { get; set; }
+    public long AddressIdManufacturer { get; set; }
     public string Complement { get; set; }
     public int Number { get; set; }
+    public string Description { get; set; }
     public int Cep { get; set; }
     
     public long NeighId { get; set; }

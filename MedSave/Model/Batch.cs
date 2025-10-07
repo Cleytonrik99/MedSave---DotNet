@@ -7,4 +7,7 @@ public class Batch
     public int CurrentQuantity { get; set; }
     public DateTime ManufacturingDate { get; set; }
     public DateTime ExpirationDate { get; set; }
+    
+    public long ManufacId { get; set; }
+    public Manufacturer Manufacturer { get; set; }
 }

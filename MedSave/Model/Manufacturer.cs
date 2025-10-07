@@ -6,9 +6,9 @@ public class Manufacturer
     public string NameManu { get; set; }
     public int Cnpj { get; set; }
     
-    public long AddressId { get; set; }
-    public Address Address { get; set; }
-    
     public long ContactManuId { get; set; }
     public ContactManufacturer ContactManufacturer { get; set; }
+    
+    public long AddressIdManufacturer { get; set; }
+    public AddressManufacturer AddressManufacturer { get; set; }
 }
