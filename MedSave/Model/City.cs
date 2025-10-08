@@ -6,5 +6,5 @@ public class City
     public string NameCity { get; set; }
     
     public long StateId { get; set; }
-    public State State { get; set; }
+    public States States { get; set; }
 }

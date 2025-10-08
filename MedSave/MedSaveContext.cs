@@ -9,12 +9,12 @@ public class MedSaveContext : DbContext
     public DbSet<ActiveIngredient> ActiveIngredient { get; set; }
     public DbSet<AddressManufacturer> AddressManufacturer { get; set; }
     public DbSet<AddressStock> AddressStock { get; set; }
-    public DbSet<Batch> Batch { get; set; }
+    public DbSet<BatchMedicine> BatchMedicine { get; set; }
     public DbSet<CategoryMedicine> CategoryMedicine { get; set; }
     public DbSet<City> City { get; set; }
     public DbSet<ContactManufacturer> ContactManufacturer { get; set; }
     public DbSet<ContactUser> ContactUser { get; set; }
-    public DbSet<Location> Location { get; set; }
+    public DbSet<LocationStock> LocationStock { get; set; }
     public DbSet<Manufacturer> Manufacturer { get; set; }
     public DbSet<MedicineDispense> MedicineDispense { get; set; }
     public DbSet<Medicines> Medicines { get; set; }
@@ -23,7 +23,7 @@ public class MedSaveContext : DbContext
     public DbSet<PharmaceuticalForm> PharmaceuticalForm { get; set; }
     public DbSet<PositionUser> PositionUser { get; set; }
     public DbSet<ProfileUser> ProfileUser { get; set; }
-    public DbSet<State> State { get; set; }
+    public DbSet<States> States { get; set; }
     public DbSet<Stock> Stock { get; set; }
     public DbSet<UnitMeasure> UnitMeasure { get; set; }
     public DbSet<UsersSys> UsersSys { get; set; }
@@ -69,13 +69,13 @@ public class MedSaveContext : DbContext
                 .HasColumnName("COMPLEMENT")
                 .HasColumnType("VARCHAR2(255)");
 
-            entity.Property(e => e.Number)
-                .HasColumnName("NUMBER")
+            entity.Property(e => e.NumberManu)
+                .HasColumnName("NUMBER_MANU")
                 .HasColumnType("NUMBER(7)")
                 .IsRequired();
 
-            entity.Property(e => e.Description)
-                .HasColumnName("DESCRIPTION")
+            entity.Property(e => e.AddressDescription)
+                .HasColumnName("ADDRESS_DESCRIPTION")
                 .HasColumnType("VARCHAR2(255)")
                 .IsRequired();
 
@@ -111,13 +111,13 @@ public class MedSaveContext : DbContext
                 .HasColumnName("COMPLEMENT")
                 .HasColumnType("VARCHAR2(255)");
 
-            entity.Property(e => e.Number)
-                .HasColumnName("NUMBER")
+            entity.Property(e => e.NumberStock)
+                .HasColumnName("NUMBER_STOCK")
                 .HasColumnType("NUMBER(7)")
                 .IsRequired();
 
-            entity.Property(e => e.Description)
-                .HasColumnName("DESCRIPTION")
+            entity.Property(e => e.AddressDescription)
+                .HasColumnName("ADDRESS_DESCRIPTION")
                 .HasColumnType("VARCHAR2(255)")
                 .IsRequired();
 
@@ -137,7 +137,7 @@ public class MedSaveContext : DbContext
                 .HasConstraintName("FK_NEIGHBOURHOOD_ADDRESS_STOCK");
         });
 
-        modelBuilder.Entity<Batch>(entity =>
+        modelBuilder.Entity<BatchMedicine>(entity =>
         {
             entity.ToTable("BATCH");
 
@@ -171,7 +171,7 @@ public class MedSaveContext : DbContext
 
             entity.HasOne(e => e.Manufacturer)
                 .WithOne()
-                .HasForeignKey<Batch>(e => e.ManufacId)
+                .HasForeignKey<BatchMedicine>(e => e.ManufacId)
                 .HasConstraintName("FK_MANUFACTURER_BATCH");
         });
 
@@ -209,6 +209,16 @@ public class MedSaveContext : DbContext
                 .HasColumnName("NAME_CITY")
                 .HasColumnType("VARCHAR2(255)")
                 .IsRequired();
+            
+            entity.Property(e => e.StateId)
+                .HasColumnName("STATE_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+            
+            entity.HasOne(e => e.States)
+                .WithMany()
+                .HasForeignKey(e => e.StateId)
+                .HasConstraintName("FK_STATES_CITY");
         });
 
         /*

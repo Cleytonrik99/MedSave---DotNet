@@ -1,6 +1,6 @@
 ﻿namespace MedSave.Model;
 
-public class Batch
+public class BatchMedicine
 {
     public long BatchId { get; set; }
     public string BatchNumber { get; set; }
