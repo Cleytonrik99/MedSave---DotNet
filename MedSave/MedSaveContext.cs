@@ -238,13 +238,58 @@ public class MedSaveContext : DbContext
                 .HasColumnType("VARCHAR2(255)")
                 .IsRequired();
 
+            entity.HasIndex(e => e.EmailManu)
+                .IsUnique()
+                .HasDatabaseName("UK_CONTACT_MANU_EMAIL");
+
             entity.Property(e => e.PhoneNumberManu)
                 .HasColumnName("PHONE_NUMBER_MANU")
                 .HasColumnType("NUMBER(11)")
                 .IsRequired();
+
+            entity.HasIndex(e => e.PhoneNumberManu)
+                .IsUnique()
+                .HasDatabaseName("UK_CONTACT_MANU_PHONE");
+        });
+
+        modelBuilder.Entity<ContactUser>(entity =>
+        {
+            entity.ToTable("CONTACT_USER");
+
+            entity.HasKey(e => e.ContactUserId)
+                .HasName("PK_CONTACT_USER");
+
+            entity.Property(e => e.ContactUserId)
+                .HasColumnName("CONTACT_USER_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.EmailUser)
+                .HasColumnName("EMAIL_USER")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
+
+            entity.HasIndex(e => e.EmailUser)
+                .IsUnique()
+                .HasDatabaseName("UK_CONTACT_USER_EMAIL");
+
+            entity.Property(e => e.PhoneNumberUser)
+                .HasColumnName("PHONE_NUMBER_USER")
+                .HasColumnType("NUMBER(11)")
+                .IsRequired();
+
+            entity.HasIndex(e => e.PhoneNumberUser)
+                .IsUnique()
+                .HasDatabaseName("UK_CONTACT_USER_PHONE");
         });
 
         /*
+
+         // Índice único (garante que o e-mail não se repita)
+        entity.HasIndex(e => e.Email)
+            .IsUnique()
+            .HasDatabaseName("UK_USERS_SYS_EMAIL");
+         
          1:1
          entity.Property(e => e.NeighId)
                 .HasColumnName("NEIGH_ID")
