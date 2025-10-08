@@ -488,6 +488,24 @@ public class MedSaveContext : DbContext
                 .HasConstraintName("FK_ACTIVE_INGREDIENT_MEDICINES");
         });
 
+        modelBuilder.Entity<MovementType>(entity =>
+        {
+            entity.ToTable("MOVEMENT_TYPE");
+
+            entity.HasKey(e => e.MovementTypeId)
+                .HasName("PK_MOVEMENT_TYPE");
+
+            entity.Property(e => e.MovementTypeId)
+                .HasColumnName("MOVEMENT_TYPE_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.TypeName)
+                .HasColumnName("TYPE_NAME")
+                .HasColumnType("VARCHAR2(30)")
+                .IsRequired();
+        });
+
         /*
 
          // Índice único (garante que o e-mail não se repita)
