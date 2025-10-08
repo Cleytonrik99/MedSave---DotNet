@@ -221,6 +221,29 @@ public class MedSaveContext : DbContext
                 .HasConstraintName("FK_STATES_CITY");
         });
 
+        modelBuilder.Entity<ContactManufacturer>(entity =>
+        {
+            entity.ToTable("CONTACT_MANUFACTURER");
+
+            entity.HasKey(e => e.ContactManuId)
+                .HasName("PK_CONTACT_MANUFACTURER");
+
+            entity.Property(e => e.ContactManuId)
+                .HasColumnName("CONTACT_MANU_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.EmailManu)
+                .HasColumnName("EMAIL_MANU")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
+
+            entity.Property(e => e.PhoneNumberManu)
+                .HasColumnName("PHONE_NUMBER_MANU")
+                .HasColumnType("NUMBER(11)")
+                .IsRequired();
+        });
+
         /*
          1:1
          entity.Property(e => e.NeighId)
