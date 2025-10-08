@@ -363,6 +363,68 @@ public class MedSaveContext : DbContext
                 .HasConstraintName("FK_ADDRESS_MANUFACTURER_MANUFACTURER");
         });
 
+        modelBuilder.Entity<MedicineDispense>(entity =>
+        {
+            entity.ToTable("MEDICINE_DISPENSE");
+
+            entity.HasKey(e => e.DispensationId)
+                .HasName("PK_MEDICINE_DISPENSE");
+
+            entity.Property(e => e.DispensationId)
+                .HasColumnName("DATE_DISPENSATION")
+                .HasColumnType("DATE")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.DateDispensation)
+                .HasColumnName("DATE_DISPENSATION")
+                .HasColumnType("DATE")
+                .IsRequired();
+
+            entity.Property(e => e.QuantityDispensed)
+                .HasColumnName("QUANTITY_DISPENSED")
+                .HasColumnType("NUMBER(5)")
+                .IsRequired();
+
+            entity.Property(e => e.Destination)
+                .HasColumnName("DESTINATION")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
+
+            entity.Property(e => e.Observation)
+                .HasColumnName("OBSERVATION")
+                .HasColumnType("VARCHAR2(255)");
+
+            entity.Property(e => e.UserId)
+                .HasColumnName("USER_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.UsersSys)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .HasConstraintName("FK_USERS_SYS_MEDICINE_DISPENSE");
+
+            entity.Property(e => e.MovementTypeId)
+                .HasColumnName("MOVEMENT_TYPE_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.MovementType)
+                .WithMany()
+                .HasForeignKey(e => e.MovementTypeId)
+                .HasConstraintName("FK_MOVEMENT_TYPE_MEDICINE_DISPENSE");
+
+            entity.Property(e => e.StockId)
+                .HasColumnName("STOCK_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.Stock)
+                .WithMany()
+                .HasForeignKey(e => e.StockId)
+                .HasConstraintName("FK_STOCK_MEDICINE_DISPENSE");
+        });
+
         /*
 
          // Índice único (garante que o e-mail não se repita)
