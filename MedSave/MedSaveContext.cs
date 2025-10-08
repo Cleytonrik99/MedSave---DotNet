@@ -425,6 +425,69 @@ public class MedSaveContext : DbContext
                 .HasConstraintName("FK_STOCK_MEDICINE_DISPENSE");
         });
 
+        modelBuilder.Entity<Medicines>(entity =>
+        {
+            entity.ToTable("MEDICINES");
+
+            entity.HasKey(e => e.MedicineId)
+                .HasName("PK_MEDICINES");
+
+            entity.Property(e => e.MedicineId)
+                .HasColumnName("MEDICINE_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.NameMedication)
+                .HasColumnName("NAME_MEDICATION")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
+
+            entity.Property(e => e.StatusMed)
+                .HasColumnName("STATUS_MED")
+                .HasColumnType("VARCHAR2(20)")
+                .IsRequired();
+
+            entity.Property(e => e.CategoryMedId)
+                .HasColumnName("CATEGORY_MED_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.CategoryMedicine)
+                .WithMany()
+                .HasForeignKey(e => e.CategoryMedId)
+                .HasConstraintName("FK_CATEGORY_MEDICINE_MEDICINES");
+
+            entity.Property(e => e.UnitMeaId)
+                .HasColumnName("UNIT_MEA_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.UnitMeasure)
+                .WithMany()
+                .HasForeignKey(e => e.UnitMeaId)
+                .HasConstraintName("FK_UNIT_MEASURE_MEDICINES");
+
+            entity.Property(e => e.PharmFormId)
+                .HasColumnName("PHARM_FORM_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.PharmaceuticalForm)
+                .WithMany()
+                .HasForeignKey(e => e.PharmFormId)
+                .HasConstraintName("FK_PHARMACEUTICAL_FORM_MEDICINES");
+
+            entity.Property(e => e.ActIngreId)
+                .HasColumnName("ACT_INGRE_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.ActiveIngredient)
+                .WithMany()
+                .HasForeignKey(e => e.ActIngreId)
+                .HasConstraintName("FK_ACTIVE_INGREDIENT_MEDICINES");
+        });
+
         /*
 
          // Índice único (garante que o e-mail não se repita)
