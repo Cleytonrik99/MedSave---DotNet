@@ -283,13 +283,93 @@ public class MedSaveContext : DbContext
                 .HasDatabaseName("UK_CONTACT_USER_PHONE");
         });
 
+        modelBuilder.Entity<LocationStock>(entity =>
+        {
+            entity.ToTable("LOCATION_STOCK");
+
+            entity.HasKey(e => e.LocationId)
+                .HasName("PK_LOCATION_STOCK");
+
+            entity.Property(e => e.LocationId)
+                .HasColumnName("LOCATION_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.NameLocation)
+                .HasColumnName("NAME_LOCATION")
+                .HasColumnType("VARCHAR2(30)")
+                .IsRequired();
+
+            entity.Property(e => e.LocationStockName)
+                .HasColumnName("LOCATION_STOCK_NAME")
+                .HasColumnType("VARCHAR2(100)")
+                .IsRequired();
+            
+            entity.Property(e => e.AddressIdStock)
+                .HasColumnName("ADDRESS_ID_STOCK")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.AddressStock)
+                .WithOne()
+                .HasForeignKey<LocationStock>(e => e.AddressIdStock)
+                .HasConstraintName("FK_ADDRESS_STOCK_LOCATION_STOCK");
+        });
+
+        modelBuilder.Entity<Manufacturer>(entity =>
+        {
+            entity.ToTable("MANUFACTURER");
+
+            entity.HasKey(e => e.ManufacId)
+                .HasName("PK_MANUFACTURER");
+
+            entity.Property(e => e.ManufacId)
+                .HasColumnName("MANUFAC_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.NameManu)
+                .HasColumnName("NAME_MANU")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
+
+            entity.Property(e => e.Cnpj)
+                .HasColumnName("CNPJ")
+                .HasColumnType("NUMBER(14)")
+                .IsRequired();
+
+            entity.HasIndex(e => e.Cnpj)
+                .IsUnique()
+                .HasDatabaseName("UK_MANUFACTURER_CNPJ");
+
+            entity.Property(e => e.ContactManuId)
+                .HasColumnName("CONTACT_MANU_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.ContactManufacturer)
+                .WithOne()
+                .HasForeignKey<Manufacturer>(e => e.ContactManuId)
+                .HasConstraintName("FK_CONTACT_MANUFACTURER_MANUFACTURER");
+
+            entity.Property(e => e.AddressIdManufacturer)
+                .HasColumnName("ADDRESS_ID_MANUFACTURER")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.AddressManufacturer)
+                .WithOne()
+                .HasForeignKey<Manufacturer>(e => e.AddressIdManufacturer)
+                .HasConstraintName("FK_ADDRESS_MANUFACTURER_MANUFACTURER");
+        });
+
         /*
 
          // Índice único (garante que o e-mail não se repita)
         entity.HasIndex(e => e.Email)
             .IsUnique()
             .HasDatabaseName("UK_USERS_SYS_EMAIL");
-         
+
          1:1
          entity.Property(e => e.NeighId)
                 .HasColumnName("NEIGH_ID")
