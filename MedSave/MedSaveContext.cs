@@ -654,6 +654,24 @@ public class MedSaveContext : DbContext
                 .HasConstraintName("FK_LOCATION_STOCK_STOCK");
         });
 
+        modelBuilder.Entity<UnitMeasure>(entity =>
+        {
+            entity.ToTable("UNIT_MEASURE");
+
+            entity.HasKey(e => e.UnitMeaId)
+                .HasName("PK_UNIT_MEASURE");
+
+            entity.Property(e => e.UnitMeaId)
+                .HasColumnName("UNIT_MEA_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.UnitMeasureMedicine)
+                .HasColumnName("UNIT_MEASURE_MEDICINE")
+                .HasColumnType("VARCHAR2(20)")
+                .IsRequired();
+        });
+
         /*
 
          // Índice único (garante que o e-mail não se repita)
