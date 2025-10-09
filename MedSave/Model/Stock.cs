@@ -11,6 +11,6 @@ public class Stock
     public long MedicineId { get; set; }
     public Medicines Medicines { get; set; }
     
-    public long LocationId { get; set; }
+    public long LocationIdStock { get; set; }
     public LocationStock LocationStock { get; set; }
 }

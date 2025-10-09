@@ -287,10 +287,10 @@ public class MedSaveContext : DbContext
         {
             entity.ToTable("LOCATION_STOCK");
 
-            entity.HasKey(e => e.LocationId)
+            entity.HasKey(e => e.LocationIdStock)
                 .HasName("PK_LOCATION_STOCK");
 
-            entity.Property(e => e.LocationId)
+            entity.Property(e => e.LocationIdStock)
                 .HasColumnName("LOCATION_ID_STOCK")
                 .HasColumnType("NUMBER")
                 .ValueGeneratedOnAdd();
@@ -604,6 +604,54 @@ public class MedSaveContext : DbContext
                 .HasColumnName("STATE_NAME")
                 .HasColumnType("VARCHAR2(255)")
                 .IsRequired();
+        });
+
+        modelBuilder.Entity<Stock>(entity =>
+        {
+            entity.ToTable("STOCK");
+
+            entity.HasKey(e => e.StockId)
+                .HasName("PK_STOCK");
+
+            entity.Property(e => e.StockId)
+                .HasColumnName("STOCK_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Quantity)
+                .HasColumnName("QUANTITY")
+                .HasColumnType("NUMBER(4)")
+                .IsRequired();
+
+            entity.Property(e => e.BatchId)
+                .HasColumnName("BATCH_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.BatchMedicine)
+                .WithOne()
+                .HasForeignKey<Stock>(e => e.BatchId)
+                .HasConstraintName("FK_BATCH_MEDICINE_STOCK");
+
+            entity.Property(e => e.MedicineId)
+                .HasColumnName("MEDICINE_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.Medicines)
+                .WithMany()
+                .HasForeignKey(e => e.MedicineId)
+                .HasConstraintName("FK_MEDICINES_STOCK");
+
+            entity.Property(e => e.LocationIdStock)
+                .HasColumnName("LOCATION_ID_STOCK")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.LocationStock)
+                .WithMany()
+                .HasForeignKey(e => e.LocationIdStock)
+                .HasConstraintName("FK_LOCATION_STOCK_STOCK");
         });
 
         /*

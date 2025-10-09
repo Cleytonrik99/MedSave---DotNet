@@ -2,7 +2,7 @@
 
 public class LocationStock
 {
-    public long LocationId { get; set; }
+    public long LocationIdStock { get; set; }
     public string NameLocation { get; set; }
     public string LocationStockName { get; set; }
     
