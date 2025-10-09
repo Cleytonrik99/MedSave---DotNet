@@ -139,7 +139,7 @@ public class MedSaveContext : DbContext
 
         modelBuilder.Entity<BatchMedicine>(entity =>
         {
-            entity.ToTable("BATCH");
+            entity.ToTable("BATCH_MEDICINE");
 
             entity.HasKey(e => e.BatchId)
                 .HasName("PK_BATCH");
