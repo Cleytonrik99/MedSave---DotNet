@@ -672,6 +672,64 @@ public class MedSaveContext : DbContext
                 .IsRequired();
         });
 
+        modelBuilder.Entity<UsersSys>(entity =>
+        {
+            entity.ToTable("USERS_SYS");
+
+            entity.HasKey(e => e.UserId)
+                .HasName("PK_USERS_SYS");
+
+            entity.Property(e => e.UserId)
+                .HasColumnName("USER_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.NameUser)
+                .HasColumnName("NAME_USER")
+                .HasColumnType("VARCHAR2(150)")
+                .IsRequired();
+
+            entity.Property(e => e.Login)
+                .HasColumnName("LOGIN")
+                .HasColumnType("VARCHAR(50)")
+                .IsRequired();
+
+            entity.Property(e => e.PasswordUser)
+                .HasColumnName("PASSWORD_USER")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
+
+            entity.Property(e => e.PosUserId)
+                .HasColumnName("POS_USER_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.PositionUser)
+                .WithMany()
+                .HasForeignKey(e => e.PosUserId)
+                .HasConstraintName("FK_POSITION_USER_USERS_SYS");
+
+            entity.Property(e => e.ProfUserId)
+                .HasColumnName("PROF_USER_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.ProfileUser)
+                .WithMany()
+                .HasForeignKey(e => e.ProfUserId)
+                .HasConstraintName("FK_PROFILE_USER_USERS_SYS");
+
+            entity.Property(e => e.ContactUserId)
+                .HasColumnName("CONTACT_USER_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.ContactUser)
+                .WithMany()
+                .HasForeignKey(e => e.ContactUserId)
+                .HasConstraintName("FK_CONTACT_USER_USERS_SYS");
+        });
+
         /*
 
          // Índice único (garante que o e-mail não se repita)
