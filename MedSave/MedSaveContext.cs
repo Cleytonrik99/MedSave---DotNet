@@ -170,8 +170,8 @@ public class MedSaveContext : DbContext
                 .IsRequired();
 
             entity.HasOne(e => e.Manufacturer)
-                .WithOne()
-                .HasForeignKey<BatchMedicine>(e => e.ManufacId)
+                .WithMany()
+                .HasForeignKey(e => e.ManufacId)
                 .HasConstraintName("FK_MANUFACTURER_BATCH");
         });
 
@@ -291,7 +291,7 @@ public class MedSaveContext : DbContext
                 .HasName("PK_LOCATION_STOCK");
 
             entity.Property(e => e.LocationId)
-                .HasColumnName("LOCATION_ID")
+                .HasColumnName("LOCATION_ID_STOCK")
                 .HasColumnType("NUMBER")
                 .ValueGeneratedOnAdd();
 
@@ -503,6 +503,52 @@ public class MedSaveContext : DbContext
             entity.Property(e => e.TypeName)
                 .HasColumnName("TYPE_NAME")
                 .HasColumnType("VARCHAR2(30)")
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<Neighbourhood>(entity =>
+        {
+            entity.ToTable("NEIGHBOURHOOD");
+
+            entity.HasKey(e => e.NeighId)
+                .HasName("PK_NEIGHBOURHOOD");
+
+            entity.Property(e => e.NeighId)
+                .HasColumnName("NEIGH_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.NeighName)
+                .HasColumnName("NEIGH_NAME")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
+
+            entity.Property(e => e.CityId)
+                .HasColumnName("CITY_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.City)
+                .WithMany()
+                .HasForeignKey(e => e.CityId)
+                .HasConstraintName("FK_CITY_NEIGHBOURHOOD");
+        });
+
+        modelBuilder.Entity<PharmaceuticalForm>(entity =>
+        {
+            entity.ToTable("PHARMACEUTICAL_FORM");
+
+            entity.HasKey(e => e.PharmFormId)
+                .HasName("PK_PHARMACEUTICAL_FORM");
+
+            entity.Property(e => e.PharmFormId)
+                .HasColumnName("PHARM_FORM_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.PharmaForm)
+                .HasColumnName("PHARMA_FORM")
+                .HasColumnType("VARCHAR2(100)")
                 .IsRequired();
         });
 
