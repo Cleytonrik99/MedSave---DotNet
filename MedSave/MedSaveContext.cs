@@ -552,6 +552,42 @@ public class MedSaveContext : DbContext
                 .IsRequired();
         });
 
+        modelBuilder.Entity<PositionUser>(entity =>
+        {
+            entity.ToTable("POSITION_USER");
+
+            entity.HasKey(e => e.PosUserId)
+                .HasName("PK_POSITION_USER");
+
+            entity.Property(e => e.PosUserId)
+                .HasColumnName("POS_USER_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.UserPosition)
+                .HasColumnName("USER_POSITION")
+                .HasColumnType("VARCHAR2(100)")
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<ProfileUser>(entity =>
+        {
+            entity.ToTable("POSITION_USER");
+
+            entity.HasKey(e => e.ProfUserId)
+                .HasName("PK_PROFILE_USER");
+
+            entity.Property(e => e.ProfUserId)
+                .HasColumnName("PROF_USER_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.UserProfile)
+                .HasColumnName("USER_PROFILE")
+                .HasColumnType("VARCHAR2(50)")
+                .IsRequired();
+        });
+
         /*
 
          // Índice único (garante que o e-mail não se repita)
