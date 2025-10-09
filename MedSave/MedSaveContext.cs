@@ -371,8 +371,8 @@ public class MedSaveContext : DbContext
                 .HasName("PK_MEDICINE_DISPENSE");
 
             entity.Property(e => e.DispensationId)
-                .HasColumnName("DATE_DISPENSATION")
-                .HasColumnType("DATE")
+                .HasColumnName("DISPENSATION_ID")
+                .HasColumnType("NUMBER")
                 .ValueGeneratedOnAdd();
 
             entity.Property(e => e.DateDispensation)
@@ -572,7 +572,7 @@ public class MedSaveContext : DbContext
 
         modelBuilder.Entity<ProfileUser>(entity =>
         {
-            entity.ToTable("POSITION_USER");
+            entity.ToTable("PROFILE_USER");
 
             entity.HasKey(e => e.ProfUserId)
                 .HasName("PK_PROFILE_USER");
@@ -729,25 +729,5 @@ public class MedSaveContext : DbContext
                 .HasForeignKey(e => e.ContactUserId)
                 .HasConstraintName("FK_CONTACT_USER_USERS_SYS");
         });
-
-        /*
-
-         // Índice único (garante que o e-mail não se repita)
-        entity.HasIndex(e => e.Email)
-            .IsUnique()
-            .HasDatabaseName("UK_USERS_SYS_EMAIL");
-
-         1:1
-         entity.Property(e => e.NeighId)
-                .HasColumnName("NEIGH_ID")
-                .HasColumnType("NUMBER")
-                .IsRequired();
-
-            entity.HasOne(e => e.Neighbourhood)
-                .WithOne()
-                .HasForeignKey<AddressStock>(e => e.NeighId)
-                .HasConstraintName("FK_NEIGHBOURHOOD_ADDRESS_STOCK");
-         */
-
     }
 }
