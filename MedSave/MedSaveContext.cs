@@ -588,6 +588,24 @@ public class MedSaveContext : DbContext
                 .IsRequired();
         });
 
+        modelBuilder.Entity<States>(entity =>
+        {
+            entity.ToTable("STATES");
+
+            entity.HasKey(e => e.StateId)
+                .HasName("PK_STATES");
+
+            entity.Property(e => e.StateId)
+                .HasColumnName("STATE_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.StateName)
+                .HasColumnName("STATE_NAME")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
+        });
+
         /*
 
          // Índice único (garante que o e-mail não se repita)
