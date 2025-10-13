@@ -11,10 +11,4 @@ public class Medicines
     
     public long UnitMeaId { get; set; }
     public UnitMeasure UnitMeasure { get; set; }
-    
-    public long PharmFormId { get; set; }
-    public PharmaceuticalForm PharmaceuticalForm { get; set; }
-    
-    public long ActIngreId { get; set; }
-    public ActiveIngredient ActiveIngredient { get; set; }
 }

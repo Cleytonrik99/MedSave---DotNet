@@ -7,7 +7,6 @@ public class AddressStock
     public int NumberStock { get; set; }
     public string AddressDescription { get; set; }
     public int Cep { get; set; }
-    
     public long NeighId { get; set; }
     public Neighbourhood Neighbourhood { get; set; }
 }

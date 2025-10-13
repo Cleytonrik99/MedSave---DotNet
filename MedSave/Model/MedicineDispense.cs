@@ -10,10 +10,4 @@ public class MedicineDispense
     
     public long UserId { get; set; }
     public UsersSys UsersSys { get; set; }
-    
-    public long MovementTypeId { get; set; }
-    public MovementType MovementType { get; set; }
-    
-    public long StockId { get; set; }
-    public Stock Stock { get; set; }
 }

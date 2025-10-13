@@ -16,15 +16,18 @@ public class MedSaveContext : DbContext
     public DbSet<ContactUser> ContactUser { get; set; }
     public DbSet<LocationStock> LocationStock { get; set; }
     public DbSet<Manufacturer> Manufacturer { get; set; }
+    public DbSet<MedicineActiveIngr> MedicineActiveIngr { get; set; }
     public DbSet<MedicineDispense> MedicineDispense { get; set; }
+    public DbSet<MedicinePharmForm> MedicinePharmForm { get; set; }
     public DbSet<Medicines> Medicines { get; set; }
     public DbSet<MovementType> MovementType { get; set; }
     public DbSet<Neighbourhood> Neighbourhood { get; set; }
     public DbSet<PharmaceuticalForm> PharmaceuticalForm { get; set; }
-    public DbSet<PositionUser> PositionUser { get; set; }
     public DbSet<ProfileUser> ProfileUser { get; set; }
+    public DbSet<RoleUser> RoleUser { get; set; }
     public DbSet<States> States { get; set; }
     public DbSet<Stock> Stock { get; set; }
+    public DbSet<StockMovement> StockMovement { get; set; }
     public DbSet<UnitMeasure> UnitMeasure { get; set; }
     public DbSet<UsersSys> UsersSys { get; set; }
 
@@ -142,12 +145,17 @@ public class MedSaveContext : DbContext
             entity.ToTable("BATCH_MEDICINE");
 
             entity.HasKey(e => e.BatchId)
-                .HasName("PK_BATCH");
+                .HasName("PK_BATCH_MEDICINE");
 
             entity.Property(e => e.BatchId)
                 .HasColumnName("BATCH_ID")
                 .HasColumnType("NUMBER")
                 .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.BatchNumber)
+                .HasColumnName("BATCH_NUMBER")
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired();
 
             entity.Property(e => e.CurrentQuantity)
                 .HasColumnName("CURRENT_QUANTITY")
@@ -172,7 +180,7 @@ public class MedSaveContext : DbContext
             entity.HasOne(e => e.Manufacturer)
                 .WithMany()
                 .HasForeignKey(e => e.ManufacId)
-                .HasConstraintName("FK_MANUFACTURER_BATCH");
+                .HasConstraintName("FK_MANUFACTURER_BATCH_MEDICINE");
         });
 
         modelBuilder.Entity<CategoryMedicine>(entity =>
@@ -362,6 +370,39 @@ public class MedSaveContext : DbContext
                 .HasForeignKey<Manufacturer>(e => e.AddressIdManufacturer)
                 .HasConstraintName("FK_ADDRESS_MANUFACTURER_MANUFACTURER");
         });
+        
+        modelBuilder.Entity<MedicineActiveIngr>(entity =>
+        {
+            entity.ToTable("MEDICINE_ACTIVE_INGR");
+
+            entity.HasKey(e => e.MedActiveIngrId)
+                .HasName("PK_MEDICINE_ACTIVE_INGR");
+
+            entity.Property(e => e.MedActiveIngrId)
+                .HasColumnName("MED_ACTIVE_INGR_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.MedicineId)
+                .HasColumnName("MEDICINE_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.Medicines)
+                .WithMany()
+                .HasForeignKey(e => e.MedicineId)
+                .HasConstraintName("FK_MEDICINES_MEDICINE_ACTIVE_INGR");
+
+            entity.Property(e => e.ActIngreId)
+                .HasColumnName("ACT_INGRE_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.ActiveIngredient)
+                .WithMany()
+                .HasForeignKey(e => e.ActIngreId)
+                .HasConstraintName("FK_ACTIVE_INGREDIENT_MEDICINE_ACTIVE_INGR");
+        });
 
         modelBuilder.Entity<MedicineDispense>(entity =>
         {
@@ -403,26 +444,39 @@ public class MedSaveContext : DbContext
                 .WithMany()
                 .HasForeignKey(e => e.UserId)
                 .HasConstraintName("FK_USERS_SYS_MEDICINE_DISPENSE");
+        });
 
-            entity.Property(e => e.MovementTypeId)
-                .HasColumnName("MOVEMENT_TYPE_ID")
+        modelBuilder.Entity<MedicinePharmForm>(entity =>
+        {
+            entity.ToTable("MEDICINE_PHARM_FORM");
+
+            entity.HasKey(e => e.MedPharmFormId)
+                .HasName("PK_MEDICINE_PHARM_FORM");
+
+            entity.Property(e => e.MedPharmFormId)
+                .HasColumnName("MED_PHARM_FORM_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.MedicineId)
+                .HasColumnName("MEDICINE_ID")
                 .HasColumnType("NUMBER")
                 .IsRequired();
 
-            entity.HasOne(e => e.MovementType)
+            entity.HasOne(e => e.Medicines)
                 .WithMany()
-                .HasForeignKey(e => e.MovementTypeId)
-                .HasConstraintName("FK_MOVEMENT_TYPE_MEDICINE_DISPENSE");
+                .HasForeignKey(e => e.MedicineId)
+                .HasConstraintName("FK_MEDICINES_MEDICINE_PHARM_FORM");
 
-            entity.Property(e => e.StockId)
-                .HasColumnName("STOCK_ID")
+            entity.Property(e => e.PharmFormId)
+                .HasColumnName("PHARM_FORM_ID")
                 .HasColumnType("NUMBER")
                 .IsRequired();
 
-            entity.HasOne(e => e.Stock)
+            entity.HasOne(e => e.PharmaceuticalForm)
                 .WithMany()
-                .HasForeignKey(e => e.StockId)
-                .HasConstraintName("FK_STOCK_MEDICINE_DISPENSE");
+                .HasForeignKey(e => e.PharmFormId)
+                .HasConstraintName("FK_PHARMACEUTICAL_FORM_MEDICINE_PHARM_FORM");
         });
 
         modelBuilder.Entity<Medicines>(entity =>
@@ -466,26 +520,6 @@ public class MedSaveContext : DbContext
                 .WithMany()
                 .HasForeignKey(e => e.UnitMeaId)
                 .HasConstraintName("FK_UNIT_MEASURE_MEDICINES");
-
-            entity.Property(e => e.PharmFormId)
-                .HasColumnName("PHARM_FORM_ID")
-                .HasColumnType("NUMBER")
-                .IsRequired();
-
-            entity.HasOne(e => e.PharmaceuticalForm)
-                .WithMany()
-                .HasForeignKey(e => e.PharmFormId)
-                .HasConstraintName("FK_PHARMACEUTICAL_FORM_MEDICINES");
-
-            entity.Property(e => e.ActIngreId)
-                .HasColumnName("ACT_INGRE_ID")
-                .HasColumnType("NUMBER")
-                .IsRequired();
-
-            entity.HasOne(e => e.ActiveIngredient)
-                .WithMany()
-                .HasForeignKey(e => e.ActIngreId)
-                .HasConstraintName("FK_ACTIVE_INGREDIENT_MEDICINES");
         });
 
         modelBuilder.Entity<MovementType>(entity =>
@@ -552,24 +586,6 @@ public class MedSaveContext : DbContext
                 .IsRequired();
         });
 
-        modelBuilder.Entity<PositionUser>(entity =>
-        {
-            entity.ToTable("POSITION_USER");
-
-            entity.HasKey(e => e.PosUserId)
-                .HasName("PK_POSITION_USER");
-
-            entity.Property(e => e.PosUserId)
-                .HasColumnName("POS_USER_ID")
-                .HasColumnType("NUMBER")
-                .ValueGeneratedOnAdd();
-
-            entity.Property(e => e.UserPosition)
-                .HasColumnName("USER_POSITION")
-                .HasColumnType("VARCHAR2(100)")
-                .IsRequired();
-        });
-
         modelBuilder.Entity<ProfileUser>(entity =>
         {
             entity.ToTable("PROFILE_USER");
@@ -585,6 +601,24 @@ public class MedSaveContext : DbContext
             entity.Property(e => e.UserProfile)
                 .HasColumnName("USER_PROFILE")
                 .HasColumnType("VARCHAR2(50)")
+                .IsRequired();
+        });
+        
+        modelBuilder.Entity<RoleUser>(entity =>
+        {
+            entity.ToTable("ROLE_USER");
+
+            entity.HasKey(e => e.PosUserId)
+                .HasName("PK_ROLE_USER");
+
+            entity.Property(e => e.PosUserId)
+                .HasColumnName("POS_USER_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.UserRole)
+                .HasColumnName("USER_ROLE")
+                .HasColumnType("VARCHAR2(100)")
                 .IsRequired();
         });
 
@@ -654,6 +688,69 @@ public class MedSaveContext : DbContext
                 .HasConstraintName("FK_LOCATION_STOCK_STOCK");
         });
 
+        modelBuilder.Entity<StockMovement>(entity =>
+        {
+            entity.ToTable("STOCK_MOVEMENT");
+
+            entity.HasKey(e => e.StockMovementId)
+                .HasName("PK_STOCK_MOVEMENT");
+
+            entity.Property(e => e.StockMovementId)
+                .HasColumnName("STOCK_MOVEMENT_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.QuantityDispensed)
+                .HasColumnName("QUANTITY_DISPENSED")
+                .HasColumnType("NUMBER(6)")
+                .IsRequired();
+
+            entity.Property(e => e.DateMoviment)
+                .HasColumnName("DATE_MOVIMENT")
+                .HasColumnType("DATE")
+                .IsRequired();
+
+            entity.Property(e => e.MovementTypeId)
+                .HasColumnName("MOVEMENT_TYPE_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.MovementType)
+                .WithMany()
+                .HasForeignKey(e => e.MovementTypeId)
+                .HasConstraintName("FK_MOVEMENT_TYPE_STOCK_MOVEMENT");
+
+            entity.Property(e => e.StockId)
+                .HasColumnName("STOCK_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.Stock)
+                .WithMany()
+                .HasForeignKey(e => e.StockId)
+                .HasConstraintName("FK_STOCK_STOCK_MOVEMENT");
+
+            entity.Property(e => e.DispensationId)
+                .HasColumnName("DISPENSATION_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.MedicineDispense)
+                .WithMany()
+                .HasForeignKey(e => e.DispensationId)
+                .HasConstraintName("FK_MEDICINE_DISPENSE_STOCK_MOVEMENT");
+
+            entity.Property(e => e.UserId)
+                .HasColumnName("USER_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.UsersSys)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .HasConstraintName("FK_USERS_SYS_STOCK_MOVEMENT");
+        });
+
         modelBuilder.Entity<UnitMeasure>(entity =>
         {
             entity.ToTable("UNIT_MEASURE");
@@ -693,6 +790,10 @@ public class MedSaveContext : DbContext
                 .HasColumnName("LOGIN")
                 .HasColumnType("VARCHAR(50)")
                 .IsRequired();
+            
+            entity.HasIndex(e => e.Login)
+                .IsUnique()
+                .HasDatabaseName("UK_USERS_SYS_LOGIN");
 
             entity.Property(e => e.PasswordUser)
                 .HasColumnName("PASSWORD_USER")
@@ -704,10 +805,10 @@ public class MedSaveContext : DbContext
                 .HasColumnType("NUMBER")
                 .IsRequired();
 
-            entity.HasOne(e => e.PositionUser)
+            entity.HasOne(e => e.RoleUser)
                 .WithMany()
                 .HasForeignKey(e => e.PosUserId)
-                .HasConstraintName("FK_POSITION_USER_USERS_SYS");
+                .HasConstraintName("FK_ROLE_USER_USERS_SYS");
 
             entity.Property(e => e.ProfUserId)
                 .HasColumnName("PROF_USER_ID")
@@ -725,8 +826,8 @@ public class MedSaveContext : DbContext
                 .IsRequired();
 
             entity.HasOne(e => e.ContactUser)
-                .WithMany()
-                .HasForeignKey(e => e.ContactUserId)
+                .WithOne()
+                .HasForeignKey<UsersSys>(e => e.ContactUserId)
                 .HasConstraintName("FK_CONTACT_USER_USERS_SYS");
         });
     }

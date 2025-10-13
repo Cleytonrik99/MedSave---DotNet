@@ -7,7 +7,6 @@ public class AddressManufacturer
     public int NumberManu { get; set; }
     public string AddressDescription { get; set; }
     public int Cep { get; set; }
-    
     public long NeighId { get; set; }
     public Neighbourhood Neighbourhood { get; set; }
 }
