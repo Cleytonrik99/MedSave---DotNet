@@ -2,7 +2,7 @@
 using MedSave.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedSave;
+namespace MedSave.Context;
 
 public class MedSaveContext : DbContext
 {
