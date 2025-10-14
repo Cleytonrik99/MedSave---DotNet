@@ -252,7 +252,7 @@ public class MedSaveContext : DbContext
 
             entity.Property(e => e.PhoneNumberManu)
                 .HasColumnName("PHONE_NUMBER_MANU")
-                .HasColumnType("NUMBER(11)")
+                .HasColumnType("NUMBER")
                 .IsRequired();
 
             entity.HasIndex(e => e.PhoneNumberManu)
@@ -283,7 +283,7 @@ public class MedSaveContext : DbContext
 
             entity.Property(e => e.PhoneNumberUser)
                 .HasColumnName("PHONE_NUMBER_USER")
-                .HasColumnType("NUMBER(11)")
+                .HasColumnType("NUMBER")
                 .IsRequired();
 
             entity.HasIndex(e => e.PhoneNumberUser)
