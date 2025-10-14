@@ -7,7 +7,7 @@ public class UsersSys
     public string Login { get; set; }
     public string PasswordUser { get; set; }
     
-    public long PosUserId { get; set; }
+    public long RoleUserId { get; set; }
     public RoleUser RoleUser { get; set; }
     
     public long ProfUserId { get; set; }

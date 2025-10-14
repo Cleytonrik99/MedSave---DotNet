@@ -1,3 +1,12 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using MedSave.Context;
+using MedSave.Repositories;
 
-Console.WriteLine("Hello, World!");
+static void Main(string[] args)
+{
+    var context = new MedSaveContext();
+
+    var userRepo = new UsersSysRepository(context);
+    var stockRepo = new StockRepository(context);
+
+    stockRepo.GetByIdAsync(1);
+}

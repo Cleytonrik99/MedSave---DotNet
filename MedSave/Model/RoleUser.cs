@@ -2,6 +2,6 @@
 
 public class RoleUser
 {
-    public long PosUserId { get; set; }
+    public long RoleUserId { get; set; }
     public string UserRole { get; set; }
 }

@@ -433,7 +433,8 @@ public class MedSaveContext : DbContext
 
             entity.Property(e => e.Observation)
                 .HasColumnName("OBSERVATION")
-                .HasColumnType("VARCHAR2(255)");
+                .HasColumnType("VARCHAR2(255)")
+                .IsRequired(false);
 
             entity.Property(e => e.UserId)
                 .HasColumnName("USER_ID")
@@ -608,11 +609,11 @@ public class MedSaveContext : DbContext
         {
             entity.ToTable("ROLE_USER");
 
-            entity.HasKey(e => e.PosUserId)
+            entity.HasKey(e => e.RoleUserId)
                 .HasName("PK_ROLE_USER");
 
-            entity.Property(e => e.PosUserId)
-                .HasColumnName("POS_USER_ID")
+            entity.Property(e => e.RoleUserId)
+                .HasColumnName("ROLE_USER_ID")
                 .HasColumnType("NUMBER")
                 .ValueGeneratedOnAdd();
 
@@ -800,14 +801,14 @@ public class MedSaveContext : DbContext
                 .HasColumnType("VARCHAR2(255)")
                 .IsRequired();
 
-            entity.Property(e => e.PosUserId)
-                .HasColumnName("POS_USER_ID")
+            entity.Property(e => e.RoleUserId)
+                .HasColumnName("ROLE_USER_ID")
                 .HasColumnType("NUMBER")
                 .IsRequired();
 
             entity.HasOne(e => e.RoleUser)
                 .WithMany()
-                .HasForeignKey(e => e.PosUserId)
+                .HasForeignKey(e => e.RoleUserId)
                 .HasConstraintName("FK_ROLE_USER_USERS_SYS");
 
             entity.Property(e => e.ProfUserId)
