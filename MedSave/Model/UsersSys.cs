@@ -15,4 +15,10 @@ public class UsersSys
     
     public long ContactUserId { get; set; }
     public ContactUser ContactUser { get; set; }
+
+    public override string ToString()
+    {
+        return
+            $"{nameof(UserId)}: {UserId}, {nameof(NameUser)}: {NameUser}, {nameof(Login)}: {Login}, {nameof(PasswordUser)}: {PasswordUser}, {nameof(RoleUserId)}: {RoleUserId}, {nameof(ProfUserId)}: {ProfUserId}, {nameof(ContactUserId)}: {ContactUserId}";
+    }
 }

@@ -15,12 +15,12 @@ public class StockRepository : IStockRepository
     
     public async Task<Stock?> GetByIdAsync(long id)
     {
-        return await _context.Stock.FindAsync(id);
+        return await _context.Stock.FindAsync(id); // Funcionando
     }
 
     public async Task<IEnumerable<Stock>> GetAllAsync()
     {
-        return await _context.Stock.ToListAsync();
+        return await _context.Stock.ToListAsync(); // Funcionando
     }
 
     public async Task UpdateAsync(Stock stock)

@@ -13,4 +13,10 @@ public class Stock
     
     public long LocationIdStock { get; set; }
     public LocationStock LocationStock { get; set; }
+
+    public override string ToString()
+    {
+        return
+            $"{nameof(StockId)}: {StockId}, {nameof(Quantity)}: {Quantity}, {nameof(BatchId)}: {BatchId}, {nameof(MedicineId)}: {MedicineId},  {nameof(LocationIdStock)}: {LocationIdStock}";
+    }
 }
