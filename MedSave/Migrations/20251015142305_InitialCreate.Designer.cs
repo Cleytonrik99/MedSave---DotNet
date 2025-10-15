@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace MedSave.Migrations
 {
     [DbContext(typeof(MedSaveContext))]
-    [Migration("20251014173615_SmallAlterations")]
-    partial class SmallAlterations
+    [Migration("20251015142305_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -255,8 +255,8 @@ namespace MedSave.Migrations
                         .HasColumnType("VARCHAR2(255)")
                         .HasColumnName("EMAIL_USER");
 
-                    b.Property<decimal>("PhoneNumberUser")
-                        .HasColumnType("NUMBER")
+                    b.Property<long>("PhoneNumberUser")
+                        .HasColumnType("NUMBER(15)")
                         .HasColumnName("PHONE_NUMBER_USER");
 
                     b.HasKey("ContactUserId")

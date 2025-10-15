@@ -252,8 +252,8 @@ namespace MedSave.Migrations
                         .HasColumnType("VARCHAR2(255)")
                         .HasColumnName("EMAIL_USER");
 
-                    b.Property<decimal>("PhoneNumberUser")
-                        .HasColumnType("NUMBER")
+                    b.Property<long>("PhoneNumberUser")
+                        .HasColumnType("NUMBER(15)")
                         .HasColumnName("PHONE_NUMBER_USER");
 
                     b.HasKey("ContactUserId")

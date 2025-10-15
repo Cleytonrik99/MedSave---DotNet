@@ -44,7 +44,7 @@ namespace MedSave.Migrations
                     CONTACT_MANU_ID = table.Column<decimal>(type: "NUMBER(20,0)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     EMAIL_MANU = table.Column<string>(type: "VARCHAR2(255)", nullable: false),
-                    PHONE_NUMBER_MANU = table.Column<long>(type: "NUMBER(11)", nullable: false)
+                    PHONE_NUMBER_MANU = table.Column<decimal>(type: "NUMBER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,7 +58,7 @@ namespace MedSave.Migrations
                     CONTACT_USER_ID = table.Column<decimal>(type: "NUMBER(20,0)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     EMAIL_USER = table.Column<string>(type: "VARCHAR2(255)", nullable: false),
-                    PHONE_NUMBER_USER = table.Column<long>(type: "NUMBER(11)", nullable: false)
+                    PHONE_NUMBER_USER = table.Column<long>(type: "NUMBER(15)", nullable: false)
                 },
                 constraints: table =>
                 {

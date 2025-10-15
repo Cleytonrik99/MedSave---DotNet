@@ -15,12 +15,12 @@ public class ContactUserRepository : IContactUserRepository
     
     public async Task<ContactUser?> GetByIdAsync(long id)
     {
-        return await _context.ContactUser.FindAsync(id);
+        return await _context.ContactUser.FindAsync(id); // Funcionando
     }
 
     public async Task<IEnumerable<ContactUser>> GetAllAsync()
     {
-        return await _context.ContactUser.ToListAsync();
+        return await _context.ContactUser.ToListAsync(); // Funcionando
     }
 
     public async Task AddAsync (ContactUser contactUser)

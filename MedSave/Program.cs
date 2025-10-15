@@ -14,7 +14,14 @@ namespace MedSave
 
             var userRepo = new UsersSysRepository(context);
             var stockRepo = new StockRepository(context);
-            
-            await userRepo.AddAsync(UsersSys); 
+            var contactUserRepo = new ContactUserRepository(context);
+
+            var result = await contactUserRepo.GetAllAsync();
+
+            foreach (var contact in result)
+            {
+                Console.WriteLine(contact);
+            }
+        }
     }
 }
