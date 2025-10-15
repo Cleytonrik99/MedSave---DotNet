@@ -7,5 +7,6 @@ public interface IUsersSysRepository
     Task<UsersSys?> GetByIdAsync(long id);
     Task<IEnumerable<UsersSys>> GetAllAsync();
     Task AddAsync(UsersSys usersSys);
+    Task UpdateAsync(ContactUser contactUser);
     Task DeleteAsync(long id);
 }

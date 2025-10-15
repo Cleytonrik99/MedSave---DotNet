@@ -25,7 +25,7 @@ public class StockRepository : IStockRepository
 
     public async Task UpdateAsync(Stock stock)
     {
-        _context.Stock.Update(stock);
+        _context.Stock.Update(stock); // Funcionando mas com bug relacionado aos números
         await _context.SaveChangesAsync();
     }
 }

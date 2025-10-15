@@ -15,12 +15,12 @@ public class UsersSysRepository : IUsersSysRepository
 
     public async Task<UsersSys?> GetByIdAsync(long id)
     {
-        return await _context.UsersSys.FindAsync(id);
+        return await _context.UsersSys.FindAsync(id); // Funcionando
     }
 
     public async Task<IEnumerable<UsersSys>> GetAllAsync()
     {
-        return await _context.UsersSys.ToListAsync();
+        return await _context.UsersSys.ToListAsync(); // Funcionando
     }
 
     public async Task AddAsync(UsersSys usersSys)

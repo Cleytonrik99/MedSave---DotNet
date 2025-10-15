@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Cleyton\\Documents\\Faculdade\\DotNet\\MedSave\\MedSave\\MedSave.csproj": {}
+    "C:\\Users\\labsfiap\\Desktop\\Revoada\\MedSave---DotNet\\MedSave\\MedSave.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Cleyton\\Documents\\Faculdade\\DotNet\\MedSave\\MedSave\\MedSave.csproj": {
+    "C:\\Users\\labsfiap\\Desktop\\Revoada\\MedSave---DotNet\\MedSave\\MedSave.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Cleyton\\Documents\\Faculdade\\DotNet\\MedSave\\MedSave\\MedSave.csproj",
+        "projectUniqueName": "C:\\Users\\labsfiap\\Desktop\\Revoada\\MedSave---DotNet\\MedSave\\MedSave.csproj",
         "projectName": "MedSave",
-        "projectPath": "C:\\Users\\Cleyton\\Documents\\Faculdade\\DotNet\\MedSave\\MedSave\\MedSave.csproj",
-        "packagesPath": "C:\\Users\\Cleyton\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Cleyton\\Documents\\Faculdade\\DotNet\\MedSave\\MedSave\\obj\\",
+        "projectPath": "C:\\Users\\labsfiap\\Desktop\\Revoada\\MedSave---DotNet\\MedSave\\MedSave.csproj",
+        "packagesPath": "C:\\Users\\labsfiap\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\labsfiap\\Desktop\\Revoada\\MedSave---DotNet\\MedSave\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Cleyton\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\labsfiap\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -81,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
