@@ -28,6 +28,12 @@ public class UsersSysRepository : IUsersSysRepository
         _context.UsersSys.Add(usersSys);
         await _context.SaveChangesAsync();
     }
+    
+    public async Task UpdateAsync(UsersSys usersSys)
+    {
+        _context.UsersSys.Update(usersSys); 
+        await _context.SaveChangesAsync();
+    }
 
     public async Task DeleteAsync(long id)
     {
