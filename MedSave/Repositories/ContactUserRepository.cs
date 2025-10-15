@@ -25,19 +25,19 @@ public class ContactUserRepository : IContactUserRepository
 
     public async Task AddAsync (ContactUser contactUser)
     {
-        _context.ContactUser.Add(contactUser);
+        _context.ContactUser.Add(contactUser); // Funcionando
         await _context.SaveChangesAsync();
     }
     
     public async Task UpdateAsync(ContactUser contactUser)
     {
-        _context.ContactUser.Update(contactUser); 
+        _context.ContactUser.Update(contactUser); // Funcionando
         await _context.SaveChangesAsync();
     }
     
     public async Task DeleteAsync(long id)
     {
-        var contact = await _context.ContactUser.FindAsync(id);
+        var contact = await _context.ContactUser.FindAsync(id); // Funcionando
         if (contact != null)
         {
             _context.ContactUser.Remove(contact);

@@ -25,22 +25,22 @@ public class UsersSysRepository : IUsersSysRepository
 
     public async Task AddAsync(UsersSys usersSys)
     {
-        _context.UsersSys.Add(usersSys);
+        _context.UsersSys.Add(usersSys); // Funcionando
         await _context.SaveChangesAsync();
     }
     
     public async Task UpdateAsync(UsersSys usersSys)
     {
-        _context.UsersSys.Update(usersSys); 
+        _context.UsersSys.Update(usersSys); // Funcionando
         await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(long id)
     {
-        var user = await _context.UsersSys.FindAsync(id);
+        var user = await _context.UsersSys.FindAsync(id); 
         if (user != null)
         {
-            _context.UsersSys.Remove(user);
+            _context.UsersSys.Remove(user); // Funcionando
             await _context.SaveChangesAsync();
         }
     }
