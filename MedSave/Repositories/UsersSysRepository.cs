@@ -12,10 +12,22 @@ public class UsersSysRepository : IUsersSysRepository
     {
         _context = context;
     }
+    
+    public class NotFoundException : Exception
+    {
+        public NotFoundException(string message) : base(message) { }
+    }
 
     public async Task<UsersSys?> GetByIdAsync(long id)
     {
-        return await _context.UsersSys.FindAsync(id); // Funcionando
+        var search = await _context.UsersSys.FindAsync(id); // Funcionando
+
+        if (search == null)
+        {
+            throw new NotFoundException($"User with Id {id} not found");
+        }
+
+        return search;
     }
 
     public async Task<IEnumerable<UsersSys>> GetAllAsync()

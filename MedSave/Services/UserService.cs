@@ -1,7 +1,36 @@
-﻿namespace MedSave.Services;
+﻿using System.Globalization;
+using MedSave.Context;
+using MedSave.DTOs;
+using MedSave.Repositories;
+using Microsoft.EntityFrameworkCore;
 
-public class UserService
+namespace MedSave.Services;
+
+public class UserService : IUserService 
 {
+    private readonly UsersSysRepository _usersSysRepository;
+
+    public UserService(UsersSysRepository usersSysRepository)
+    {
+        _usersSysRepository = usersSysRepository;
+    }
+
+    public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
+    {
+        var users = await _usersSysRepository.GetAllAsync();
+
+        return users.Select(user => new UserDTO
+        {
+            UserId = user.UserId,
+            NameUser = user.NameUser,
+            Login = user.Login,
+            PasswordUser = user.PasswordUser,
+            RoleUserId = user.RoleUserId,
+            ProfUserId = user.ProfUserId,
+            ContactUserId = user.ContactUserId
+        }).ToList();
+    }
+    
     /*
     C - Usuário se cadastrar
     -> Criar um contato
