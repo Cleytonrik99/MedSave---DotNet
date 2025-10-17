@@ -7,7 +7,16 @@
 O **MedSave** é um sistema essencial proposto para modernizar e garantir a **segurança** na gestão de todo o fluxo de medicamentos da instituição. A proposta é transformar o **controle de estoque**, que hoje é propenso a falhas manuais, em um processo **digital, rastreável e confiável**.
 
 O projeto atuará como o **coração da logística farmacêutica**, controlando o ciclo completo: desde a entrada de um produto no estoque até sua dispensação final ao paciente. O sistema garantirá que a gestão saiba exatamente **onde, quanto e até quando** cada medicamento pode ser utilizado, graças ao **registro detalhado por lote e data de validade**, evitando desperdícios e falhas no controle de validade, além de otimizar a alocação e redistribuição dos medicamentos entre diferentes unidades de saúde.
+---
+## 🏗️ Arquitetura e Tecnologia
 
+A MedSave adota uma arquitetura moderna e escalável, utilizando o melhor de cada tecnologia:
+
+* **Frontend & BI:** **Oracle Apex**
+* **Backend & Microserviços:** **Java** e **C#**
+* **Mobile:** **React Native**
+* **Banco de Dados:** **Oracle DB**
+* **Cloud:** **Oracle Cloud Infrastructure**
 ---
 
 ## 🤝 Integrantes do Projeto
