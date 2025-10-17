@@ -1,3 +1,5 @@
+![Logo MedSave](images/logo.png)
+
 # MedSave: Sistema de Gestão de Medicamentos
 
 ## Definição do Projeto
@@ -135,6 +137,12 @@ O **MedSave** não incluirá funcionalidades de **gestão financeira**, **gestã
 | **PUT** | `/api/Stock/{id}` | Atualiza as informações de um estoque existente. | `json { "stockId": 1, "medicineId": 3, "locationIdStock": 2, "batchId": 4, "quantity": 250 } ` | 204 No Content ou 404 Not Found.  |
 
 
+---
+### 🗃️ Diagrama de Entidade-Relacionamento (DER)
+
+<div align="center">
+  <img src="images/der.jpg" alt="Diagrama DER" style="max-width: 90%; border: 1px solid #ddd; border-radius: 4px;">
+</div>
 ---
 
 ## Como Rodar o Projeto
