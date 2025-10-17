@@ -102,6 +102,29 @@ O **MedSave** não incluirá funcionalidades de **gestão financeira**, **gestã
 6. **Manutenibilidade**:
    - O código será estruturado de forma a permitir fácil manutenção e expansão.
    - O sistema será documentado adequadamente, com instruções claras sobre como adicionar novas funcionalidades ou corrigir erros.
+---
+# 📡 API MedSave — Endpoints e Exemplos
+---
+
+## 👤 Users — `/api/UsersSys`
+
+| Método | Endpoint | Descrição | Corpo da Requisição (JSON) | Resposta Esperada |
+|--------|-----------|------------|-----------------------------|-------------------|
+| **GET** | `/api/UsersSys` | Retorna todos os usuários cadastrados. | — | 200 OK com lista de `UsersSysDTO`. |
+| **GET** | `/api/UsersSys/{id}` | Retorna um usuário específico pelo ID. | — | 200 OK (objeto) ou 404 Not Found. |
+| **POST** | `/api/UsersSys` | Cria um novo usuário junto com seu contato. | ```json { "usersSysDto": { "nameUser": "Maria Oliveira", "login": "maria.oli", "passwordUser": "senhaSegura123", "roleUserId": 2, "profUserId": 3 }, "contactUserDto": { "emailUser": "maria.oliveira@hospital.com", "phoneNumberUser": "11999887766" } } ``` | 201 Created (objeto criado) ou 400/409 se houver duplicidade. |
+| **DELETE** | `/api/UsersSys/{id}` | Deleta um usuário existente. | — | 200 OK (mensagem de sucesso) ou 404 Not Found. |
+
+---
+
+## 📦 Stock — /api/Stock
+
+| Método  | Endpoint          | Descrição                                        | Corpo da Requisição (JSON)                                                                     | Resposta Esperada                 |
+| ------- | ----------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------- | --------------------------------- |
+| **GET** | `/api/Stock`      | Retorna todos os registros de estoque.           | —                                                                                              | 200 OK com lista de `StockDTO`.   |
+| **GET** | `/api/Stock/{id}` | Retorna um estoque específico pelo ID.           | —                                                                                              | 200 OK (objeto) ou 404 Not Found. |
+| **PUT** | `/api/Stock/{id}` | Atualiza as informações de um estoque existente. | `json { "stockId": 1, "medicineId": 3, "locationIdStock": 2, "batchId": 4, "quantity": 250 } ` | 204 No Content ou 404 Not Found.  |
+
 
 ---
 
