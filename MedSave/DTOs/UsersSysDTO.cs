@@ -1,6 +1,6 @@
 ﻿namespace MedSave.DTOs;
 
-public class UserDTO
+public class UsersSysDTO
 {
     public long UserId { get; set; }
     public string NameUser { get; set; }

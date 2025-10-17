@@ -15,7 +15,7 @@ public class UsersSysRepository : IUsersSysRepository
     
     public class NotFoundException : Exception
     {
-        public NotFoundException(string message) : base(message) { }
+        public NotFoundException(string message) : base(message) {}
     }
 
     public async Task<UsersSys?> GetByIdAsync(long id)
@@ -32,7 +32,14 @@ public class UsersSysRepository : IUsersSysRepository
 
     public async Task<IEnumerable<UsersSys>> GetAllAsync()
     {
-        return await _context.UsersSys.ToListAsync(); // Funcionando
+        var search = await _context.UsersSys.ToListAsync(); // Funcionando
+
+        if (search.Count == 0)
+        {
+            throw new NotFoundException("Not Users found");
+        }
+
+        return search;
     }
 
     public async Task AddAsync(UsersSys usersSys)
@@ -49,11 +56,15 @@ public class UsersSysRepository : IUsersSysRepository
 
     public async Task DeleteAsync(long id)
     {
-        var user = await _context.UsersSys.FindAsync(id); 
-        if (user != null)
+        var search = await _context.UsersSys.FindAsync(id); // Funcionando
+
+        if (search == null)
         {
-            _context.UsersSys.Remove(user); // Funcionando
-            await _context.SaveChangesAsync();
+            throw new NotFoundException($"User with Id {id} not found");
         }
+        
+        _context.UsersSys.Remove(search); // Funcionando
+        await _context.SaveChangesAsync();
+        
     }
 }

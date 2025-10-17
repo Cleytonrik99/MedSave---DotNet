@@ -1,25 +1,30 @@
 ﻿using System.Globalization;
 using MedSave.Context;
 using MedSave.DTOs;
+using MedSave.Model;
 using MedSave.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedSave.Services;
 
-public class UserService : IUserService 
+public class UsersSysService : IUsersSysService 
 {
     private readonly UsersSysRepository _usersSysRepository;
+    private readonly ContactUserRepository _contactUserRepository;
+    private readonly MedSaveContext _context;
 
-    public UserService(UsersSysRepository usersSysRepository)
+    public UsersSysService(UsersSysRepository usersSysRepository, ContactUserRepository contactUserRepository, MedSaveContext context)
     {
         _usersSysRepository = usersSysRepository;
+        _contactUserRepository = contactUserRepository;
+        _context = context;
     }
 
-    public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
+    public async Task<IEnumerable<UsersSysDTO>> GetAllUsersAsync()
     {
         var users = await _usersSysRepository.GetAllAsync();
 
-        return users.Select(user => new UserDTO
+        return users.Select(user => new UsersSysDTO
         {
             UserId = user.UserId,
             NameUser = user.NameUser,
@@ -30,7 +35,59 @@ public class UserService : IUserService
             ContactUserId = user.ContactUserId
         }).ToList();
     }
+
+    public async Task<UsersSysDTO> GetByIdAsync(long id)
+    {
+        var user = await _usersSysRepository.GetByIdAsync(id);
+
+        return new UsersSysDTO
+        {
+            UserId = user.UserId,
+            NameUser = user.NameUser,
+            Login = user.Login,
+            RoleUserId = user.RoleUserId,
+            ProfUserId = user.ProfUserId,
+            ContactUserId = user.ContactUserId
+        };
+    }
     
+    public async Task<UsersSysDTO> AddUserAsync(UsersSysDTO usersSysDto, ContactUserDTO contactUserDto)
+    {
+        var usobj = new ContactUser
+        {
+            EmailUser = contactUserDto.EmailUser,
+            PhoneNumberUser = contactUserDto.PhoneNumberUser
+        };
+        
+        await _contactUserRepository.AddAsync(usobj);
+        
+        var contact = await _context.ContactUser
+            .FirstOrDefaultAsync(c => c.EmailUser == contactUserDto.EmailUser);
+        
+        var user = new UsersSys
+        {
+            NameUser = usersSysDto.NameUser,
+            Login = usersSysDto.Login,
+            PasswordUser = usersSysDto.PasswordUser,
+            RoleUserId = usersSysDto.RoleUserId,
+            ProfUserId = usersSysDto.ProfUserId,
+            ContactUserId = contact.ContactUserId
+        };
+
+        await _usersSysRepository.AddAsync(user);
+        
+        return new UsersSysDTO
+        {
+            UserId = user.UserId,
+            NameUser = user.NameUser,
+            Login = user.Login,
+            PasswordUser = "***",
+            RoleUserId = user.RoleUserId,
+            ProfUserId = user.ProfUserId,
+            ContactUserId = user.ContactUserId
+        };
+    }
+
     /*
     C - Usuário se cadastrar
     -> Criar um contato
