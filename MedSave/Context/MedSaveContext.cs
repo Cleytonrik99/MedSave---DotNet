@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using MedSave.Model;
 using Microsoft.EntityFrameworkCore;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace MedSave.Context;
 

@@ -1,31 +1,26 @@
 ﻿using MedSave.Context;
 using MedSave.Model;
 using MedSave.Repositories;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using MedSave.Services;
 
-namespace MedSave
-{
-    internal class Program
-    {
-        static async Task Main(string[] args)
-        {
-            Console.WriteLine("Starting program...");
+var builder = WebApplication.CreateBuilder(args);
 
-            var context = new MedSaveContext();
+// Controllers (endpoints da API)
+builder.Services.AddControllers();
 
-            var userRepo = new UsersSysRepository(context);
-            var stockRepo = new StockRepository(context);
-            var contactUserRepo = new ContactUserRepository(context);
+// DbContext: como a conexão já está no OnConfiguring, não passe opções aqui
+builder.Services.AddDbContext<MedSaveContext>();
 
-            /*
-            var newContactUser = new ContactUser { EmailUser = "testedasilva@gmail.com", PhoneNumberUser = 11912345678 };
+// DI: repositórios e serviços
+builder.Services.AddScoped<UsersSysRepository>();
+builder.Services.AddScoped<ContactUserRepository>();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
+builder.Services.AddScoped<IUsersSysService, UsersSysService>();
+builder.Services.AddScoped<IStockService, StockService>();
 
-            await contactUserRepo.AddAsync(newContactUser);
+var app = builder.Build();
 
-            var newUser = new UsersSys {NameUser = "Cleyton teste", Login = "cley16", PasswordUser = "cleytinho_teste", RoleUserId = 1, ProfUserId = 2, ContactUserId = newContactUser.ContactUserId };
-
-            await userRepo.AddAsync(newUser);
-            */
-
-        }
-    }
-}
+app.MapControllers();
+app.Run();

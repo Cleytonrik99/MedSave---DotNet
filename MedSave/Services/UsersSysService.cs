@@ -36,7 +36,7 @@ public class UsersSysService : IUsersSysService
         }).ToList();
     }
 
-    public async Task<UsersSysDTO> GetByIdAsync(long id)
+    public async Task<UsersSysDTO?> GetByIdAsync(long id)
     {
         var user = await _usersSysRepository.GetByIdAsync(id);
 
@@ -53,29 +53,29 @@ public class UsersSysService : IUsersSysService
     
     public async Task<UsersSysDTO> AddUserAsync(UsersSysDTO usersSysDto, ContactUserDTO contactUserDto)
     {
-        var usobj = new ContactUser
+        if (usersSysDto == null) throw new ArgumentNullException(nameof(usersSysDto));
+        if (contactUserDto == null) throw new ArgumentNullException(nameof(contactUserDto));
+
+        var contact = new ContactUser
         {
             EmailUser = contactUserDto.EmailUser,
             PhoneNumberUser = contactUserDto.PhoneNumberUser
         };
-        
-        await _contactUserRepository.AddAsync(usobj);
-        
-        var contact = await _context.ContactUser
-            .FirstOrDefaultAsync(c => c.EmailUser == contactUserDto.EmailUser);
-        
+
+        await _contactUserRepository.AddAsync(contact); // após SaveChanges, contact.ContactUserId está preenchido
+
         var user = new UsersSys
         {
             NameUser = usersSysDto.NameUser,
             Login = usersSysDto.Login,
-            PasswordUser = usersSysDto.PasswordUser,
+            PasswordUser = usersSysDto.PasswordUser, // ideal: hashear
             RoleUserId = usersSysDto.RoleUserId,
             ProfUserId = usersSysDto.ProfUserId,
             ContactUserId = contact.ContactUserId
         };
 
         await _usersSysRepository.AddAsync(user);
-        
+
         return new UsersSysDTO
         {
             UserId = user.UserId,
@@ -88,26 +88,24 @@ public class UsersSysService : IUsersSysService
         };
     }
 
-    /*
-    C - Usuário se cadastrar
-    -> Criar um contato
-    -> Verificar se o email e/ou telefone já está sendo usado
-    -> Criar o contato no banco de dados
-    -> Verificar se o Login já existe, se já existir, retornar um exception
-    -> Pegar o id do contato criado, jogar "dentro" do usuário
-    -> Criar o usuário no banco de dados
-    -> Retornar um DTO do usuário
+
+    public async Task DeleteAsync(long id)
+    {
+        try
+        {
+            await _usersSysRepository.DeleteAsync(id);
+        }
+        catch (UsersSysRepository.NotFoundException ex)
+        {
+            throw new UsersSysRepository.NotFoundException($"User with ID {id} not founded.");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error when Trying to delete the user with id {id}: {ex.Message}");
+        }
+    }
 
 
-        R - Login
-    -> Fazer um select no bd, com where usando o login e a senha que foram fornecidos
-    -> Se alguma informação não bater retornar uma exception "Login ou Senha Inválidos"
-    -> Retornar o id, nome
-
-
-        U - Update na quantidade do STOCK
-        D - Usuário deletar a própria conta
-    */
 /*
 DROP TABLE MEDICINE_DISPENSE CASCADE CONSTRAINT;
 DROP TABLE STOCK CASCADE CONSTRAINT;
