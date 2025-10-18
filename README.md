@@ -171,6 +171,12 @@ OBS: Pelo intuito do PUT ser a ação de um operador atualizando apenas a quanti
 </div>
 ---
 
+### Desenho da Arquitetura
+<div align="center">
+  <img src="images/diagrama.png" alt="Desenho da Arquitetura" style="max-width: 90%; border: 1px solid #ddd; border-radius: 4px;">
+</div>
+---
+
 ## Como Rodar o Projeto
 
 ### Pré-requisitos
