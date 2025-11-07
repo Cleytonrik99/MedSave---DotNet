@@ -105,35 +105,50 @@ public class UsersSysService : IUsersSysService
         }
     }
 
+    public async Task<PagedResult<UsersSysDTO>> SearchAsync(
+        string? name,
+        string? login,
+        long? roleUserId,
+        long? profUserId,
+        int page,
+        int pageSize,
+        string sortBy,
+        string sortDir)
+    {
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+        if (pageSize > 100) pageSize = 100;
+        sortBy ??= "userId";
+        sortDir ??= "asc";
 
-/*
-DROP TABLE MEDICINE_DISPENSE CASCADE CONSTRAINT;
-DROP TABLE STOCK CASCADE CONSTRAINT;
-DROP TABLE MOVEMENT_TYPE CASCADE CONSTRAINT;
-DROP TABLE BATCH CASCADE CONSTRAINT;
-DROP TABLE BATCH_MEDICINE CASCADE CONSTRAINT;
-DROP TABLE MEDICINES CASCADE CONSTRAINT;
-DROP TABLE CATEGORY_MEDICINE CASCADE CONSTRAINT;
-DROP TABLE UNIT_MEASURE CASCADE CONSTRAINT;
-DROP TABLE PHARMACEUTICAL_FORM CASCADE CONSTRAINT;
-DROP TABLE ACTIVE_INGREDIENT CASCADE CONSTRAINT;
-DROP TABLE MANUFACTURER CASCADE CONSTRAINT;
-DROP TABLE CONTACT_MANUFACTURER CASCADE CONSTRAINT;
-DROP TABLE USERS_SYS CASCADE CONSTRAINT;
-DROP TABLE PROFILE_USER CASCADE CONSTRAINT;
-DROP TABLE ROLE_USER CASCADE CONSTRAINT;
-DROP TABLE CONTACT_USER CASCADE CONSTRAINT;
-DROP TABLE LOCATION_STOCK CASCADE CONSTRAINT;
-DROP TABLE ADDRESS_STOCK CASCADE CONSTRAINT;
-DROP TABLE ADDRESS_MANUFACTURER CASCADE CONSTRAINT;
-DROP TABLE NEIGHBOURHOOD CASCADE CONSTRAINT;
-DROP TABLE CITY CASCADE CONSTRAINT;
-DROP TABLE STATES CASCADE CONSTRAINT;
-DROP TABLE "__EFMigrationsHistory" CASCADE CONSTRAINT;
-DROP TABLE STOCK_MOVEMENT CASCADE CONSTRAINT;
-DROP TABLE MEDICINE_ACTIVE_INGR CASCADE CONSTRAINT;
-DROP TABLE MEDICINE_PHARM_FORM CASCADE CONSTRAINT;
+        var (items, total) = await _usersSysRepository.SearchAsync(
+            name, login, roleUserId, profUserId,
+            page, pageSize, sortBy, sortDir
+        );
 
-commit;
-*/
+        var dtoItems = items.Select(user => new UsersSysDTO
+        {
+            UserId = user.UserId,
+            NameUser = user.NameUser,
+            Login = user.Login,
+            PasswordUser = "***",
+            RoleUserId = user.RoleUserId,
+            ProfUserId = user.ProfUserId,
+            ContactUserId = user.ContactUserId
+        }).ToList();
+
+        var totalPages = (int)Math.Ceiling(total / (double)pageSize);
+
+        return new PagedResult<UsersSysDTO>
+        {
+            Items = dtoItems,
+            PageInfo = new PageInfo
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = total,
+                TotalPages = totalPages
+            }
+        };
+    }
 }
