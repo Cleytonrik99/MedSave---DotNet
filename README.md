@@ -173,7 +173,7 @@ OBS: Pelo intuito do PUT ser a ação de um operador atualizando apenas a quanti
 
 ### Desenho da Arquitetura
 <div align="center">
-  <img src="images/diagrama.png" alt="Desenho da Arquitetura" style="max-width: 90%; border: 1px solid #ddd; border-radius: 4px;">
+  <img src="images/diagrama2.png" alt="Desenho da Arquitetura" style="max-width: 90%; border: 1px solid #ddd; border-radius: 4px;">
 </div>
 ---
 
