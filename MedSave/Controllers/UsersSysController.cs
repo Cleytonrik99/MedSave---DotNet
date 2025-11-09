@@ -1,6 +1,6 @@
 ﻿using MedSave.Services;
 using MedSave.DTOs;
-using MedSave.DTOs.Hypermedia; // ← garanta que suas classes Link/Resource/CollectionResource estão neste namespace
+using MedSave.DTOs.Hypermedia;
 using MedSave.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -20,16 +20,10 @@ public class UsersSysController : ControllerBase
         _usersSysService = usersSysService;
         _links = links;
     }
-
-    // =============================
-    // Helpers de HATEOAS
-    // =============================
-
-    // Gera um path relativo para a ação informada neste controller
+    
     private string Href(string actionName, object? values = null) =>
         _links.GetPathByAction(HttpContext, action: actionName, controller: "UsersSys", values: values) ?? "#";
 
-    // Links para um item específico (um usuário)
     private IEnumerable<Link> UserItemLinks(long id) => new[]
     {
         new Link { Rel = "self",   Href = Href(nameof(GetUserById), new { id }), Method = "GET" },
@@ -39,7 +33,6 @@ public class UsersSysController : ControllerBase
         new Link { Rel = "create", Href = Href(nameof(AddUser)),                    Method = "POST" }
     };
 
-    // Links para a coleção (lista/search) com paginação
     private IEnumerable<Link> UserCollectionLinks(int page, int pageSize, int totalPages, object? filters = null)
     {
         var baseValues = new Dictionary<string, object?>
@@ -76,11 +69,6 @@ public class UsersSysController : ControllerBase
         return links;
     }
 
-    // =============================
-    // Endpoints com HATEOAS
-    // =============================
-
-    // GET: api/UsersSys
     [HttpGet]
     public async Task<IActionResult> GetAllUsers() // Funcionando + HATEOAS
     {
@@ -120,7 +108,6 @@ public class UsersSysController : ControllerBase
         }
     }
 
-    // GET: api/UsersSys/{id}
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserById(long id) // Funcionando + HATEOAS
     {
@@ -152,7 +139,6 @@ public class UsersSysController : ControllerBase
         }
     }
 
-    // POST: api/UsersSys
     [HttpPost]
     public async Task<IActionResult> AddUser([FromBody] CreateUserRequest req) // Funcionando + HATEOAS
     {
@@ -176,7 +162,6 @@ public class UsersSysController : ControllerBase
         return CreatedAtAction(nameof(GetUserById), new { id = created.UserId }, resource);
     }
 
-    // DELETE: api/UsersSys/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(long id) // Funcionando
     {
@@ -210,7 +195,6 @@ public class UsersSysController : ControllerBase
         }
     }
 
-    // GET: api/UsersSys/search
     [HttpGet("search")]
     public async Task<IActionResult> Search(
         [FromQuery] string? name,
@@ -260,8 +244,6 @@ public class UsersSysController : ControllerBase
     }
 }
 
-// OBS: Esta é a mesma request que você já usa no POST.
-// Garanta que a classe existe em algum arquivo acessível pelo controller.
 public class CreateUserRequest
 {
     public UsersSysDTO UsersSysDto { get; set; } = default!;

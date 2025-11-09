@@ -52,7 +52,7 @@ public class StockRepository : IStockRepository
             "batchid" => desc ? query.OrderByDescending(s => s.BatchId) : query.OrderBy(s => s.BatchId),
             "quantity" => desc ? query.OrderByDescending(s => s.Quantity) : query.OrderBy(s => s.Quantity),
             "stockid" => desc ? query.OrderByDescending(s => s.StockId) : query.OrderBy(s => s.StockId),
-            _ => desc ? query.OrderByDescending(s => s.StockId) : query.OrderBy(s => s.StockId) // default
+            _ => desc ? query.OrderByDescending(s => s.StockId) : query.OrderBy(s => s.StockId)
         };
         if (page < 1) page = 1;
         if (pageSize < 1) pageSize = 10;
@@ -60,7 +60,6 @@ public class StockRepository : IStockRepository
 
         var skip = (page - 1) * pageSize;
 
-        // Paginação
         var data = await query.Skip(skip).Take(pageSize).ToListAsync();
 
         return (data, totalItems);

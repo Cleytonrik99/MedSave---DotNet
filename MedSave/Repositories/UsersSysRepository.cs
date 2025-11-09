@@ -80,13 +80,10 @@ public class UsersSysRepository : IUsersSysRepository
     {
         var query = _context.UsersSys.AsQueryable();
 
-        // Filtros (case-insensitive para texto)
         if (!string.IsNullOrWhiteSpace(name))
         {
             var n = name.Trim().ToLower();
             query = query.Where(u => u.NameUser.ToLower().Contains(n));
-            // alternativa com LIKE:
-            // query = query.Where(u => EF.Functions.Like(u.NameUser, $"%{name}%"));
         }
 
         if (!string.IsNullOrWhiteSpace(login))
