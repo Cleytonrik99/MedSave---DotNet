@@ -15,10 +15,17 @@ O projeto atuará como o **coração da logística farmacêutica**, controlando 
 A MedSave adota uma arquitetura moderna e escalável, utilizando o melhor de cada tecnologia:
 
 * **Frontend & BI:** **Oracle Apex**
-* **Backend & Microserviços:** **Java** e **C#**
+* **Backend & Microserviços:** **Java (Spring Boot)** e **C# (.NET 9 Web API)**
 * **Mobile:** **React Native**
 * **Banco de Dados:** **Oracle DB**
 * **Cloud:** **Oracle Cloud Infrastructure**
+
+A API em **.NET 9** segue uma arquitetura em **camadas**, com separação clara entre:
+- **Domain Model (Entities)** → classes de domínio do banco Oracle.  
+- **Repositories** → acesso a dados via Entity Framework Core.  
+- **Services** → lógica de negócio, validações e tratamento de exceções.  
+- **Controllers** → endpoints RESTful com suporte a **HATEOAS** (nível 3).  
+- **DTOs (Data Transfer Objects)** → isolamento das entidades para transporte seguro de dados.  
 ---
 
 ## 🤝 Integrantes do Projeto
@@ -66,172 +73,231 @@ O **MedSave** não incluirá funcionalidades de **gestão financeira**, **gestã
 
 ### Requisitos Funcionais
 
-1. **Cadastro de Usuários**:
-   - O operador poderá se cadastrar informando dados como nome, e-mail, telefone e senha.
-   - O sistema deverá verificar se o e-mail ou telefone já estão em uso.
-   - O login do usuário será criado e deverá ser único.
-
-2. **Login de Operadores**:
-   - O operador poderá fazer login utilizando um nome de usuário (login) e senha previamente cadastrados.
-   - O sistema validará as credenciais e fornecerá acesso ao painel de controle do operador.
-
-3. **Gestão de Estoque**:
-   - O operador poderá cadastrar novos medicamentos no sistema com dados como nome, descrição, quantidade e validade.
-   - O operador poderá atualizar a quantidade de medicamentos disponíveis no estoque.
-   - O sistema deverá gerar alertas para medicamentos que estão prestes a vencer.
-
-4. **Movimentação de Medicamentos**:
-   - O sistema deverá registrar entradas, saídas e transferências de medicamentos entre unidades.
-   - O operador poderá dispensar medicamentos para pacientes.
-
-5. **Análise de Dados**:
-   - O sistema utilizará algoritmos de IA para prever a demanda de medicamentos, com base em dados históricos de consumo.
-   - O sistema deverá sugerir movimentações para otimização do estoque.
+1. **Cadastro de Usuários**
+2. **Login de Operadores**
+3. **Gestão de Estoque**
+4. **Movimentação de Medicamentos**
+5. **Análise de Dados**
 
 ### Requisitos Não Funcionais
 
-1. **Desempenho**:
-   - O sistema deverá ser capaz de lidar com grande volume de dados de medicamentos e movimentações, sem perda significativa de desempenho.
-   - As consultas ao banco de dados devem ser rápidas e eficientes, especialmente nas telas de estoque e movimentação.
+- **Desempenho e Escalabilidade**
+- **Segurança e Manutenibilidade**
+- **Compatibilidade entre Plataformas**
+- **Usabilidade e Responsividade**
 
-2. **Segurança**:
-   - O sistema deve garantir que as senhas dos operadores sejam armazenadas de forma segura (uso de hash e salt).
-   - O sistema deve garantir que apenas operadores autorizados possam acessar os dados relacionados ao estoque de medicamentos e movimentações.
-
-3. **Escalabilidade**:
-   - O sistema deverá ser capaz de crescer, permitindo a inclusão de novas unidades de saúde e medicamentos, sem comprometer a performance.
-   - A arquitetura deve ser modular, permitindo que novas funcionalidades sejam adicionadas no futuro, como integração com fornecedores ou gestão financeira.
-
-4. **Usabilidade**:
-   - O sistema deve ser intuitivo, com interfaces claras e de fácil navegação tanto para a versão web (APEX) quanto para a versão móvel (React Native).
-   - O design deve ser responsivo e adaptável a diferentes dispositivos e tamanhos de tela.
-
-5. **Compatibilidade**:
-   - O sistema será compatível com as versões mais recentes dos navegadores web e dispositivos móveis (iOS e Android).
-   - A versão web será acessível por navegadores populares como Chrome, Firefox e Edge.
-
-6. **Manutenibilidade**:
-   - O código será estruturado de forma a permitir fácil manutenção e expansão.
-   - O sistema será documentado adequadamente, com instruções claras sobre como adicionar novas funcionalidades ou corrigir erros.
 ---
-# 📡 API MedSave — Endpoints e Exemplos - Por padrão rodará na porta http://localhost:5000
+
+# 📡 API MedSave — Endpoints e Exemplos  
+> Por padrão, a API roda em **http://localhost:5000**
+
 ---
 
 ## 👤 Users — `/api/UsersSys`
 
 | Método | Endpoint | Descrição | Corpo da Requisição (JSON) | Resposta Esperada |
 |--------|-----------|------------|-----------------------------|-------------------|
-| **GET** | `/api/UsersSys` | Retorna todos os usuários cadastrados. | — | 200 OK com lista de `UsersSysDTO`. |
-| **GET** | `/api/UsersSys/{id}` | Retorna um usuário específico pelo ID. | — | 200 OK (objeto) ou 404 Not Found. |
-| **POST** | `/api/UsersSys` | Cria um novo usuário junto com seu contato. | ```json { "usersSysDto": { "nameUser": "Maria Oliveira", "login": "maria.oli", "passwordUser": "senhaSegura123", "roleUserId": 2, "profUserId": 3 }, "contactUserDto": { "emailUser": "maria.oliveira@hospital.com", "phoneNumberUser": "11999887766" } } ``` | 201 Created (objeto criado) ou 400/409 se houver duplicidade. |
-| **DELETE** | `/api/UsersSys/{id}` | Deleta um usuário existente. | — | 200 OK (mensagem de sucesso) ou 404 Not Found. |
-
-### Exemplo de corpo de requisição
-```bash 
-{
-   "usersSysDto": {
-      "nameUser": "Maria Oliveira",
-      "login": "maria.oli",
-      "passwordUser": "senhaSegura123",
-      "roleUserId": 2, "profUserId": 3 },
-   "contactUserDto": {
-      "emailUser": "maria.oliveira@hospital.com",
-      "phoneNumberUser": "11999887766" }
-}
-```
+| **GET** | `/api/UsersSys` | Retorna todos os usuários cadastrados (com HATEOAS). | — | 200 OK com coleção e links de navegação. |
+| **GET** | `/api/UsersSys/{id}` | Retorna um usuário específico pelo ID. | — | 200 OK com `_links` de ações possíveis ou 404 Not Found. |
+| **POST** | `/api/UsersSys` | Cria um novo usuário e contato associado. | ```{ "usersSysDto": { "nameUser": "Maria Oliveira", "login": "maria.oli", "passwordUser": "senhaSegura123", "roleUserId": 2, "profUserId": 3 }, "contactUserDto": { "emailUser": "maria.oliveira@hospital.com", "phoneNumberUser": "11999887766" } } ``` | 201 Created (objeto criado + links) |
+| **DELETE** | `/api/UsersSys/{id}` | Deleta um usuário existente. | — | 200 OK (mensagem + links) |
+| **GET** | `/api/UsersSys/search` | Busca usuários com paginação e filtros. | — | 200 OK com `PagedResult` + `_links` de paginação. |
 
 ---
 
-## 📦 Stock — /api/Stock
+## 📦 Stock — `/api/Stock`
 
 | Método  | Endpoint          | Descrição                                        | Corpo da Requisição (JSON)                                                                     | Resposta Esperada                 |
 | ------- | ----------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------- | --------------------------------- |
-| **GET** | `/api/Stock`      | Retorna todos os registros de estoque.           | —                                                                                              | 200 OK com lista de `StockDTO`.   |
+| **GET** | `/api/Stock`      | Retorna todos os registros de estoque (HATEOAS). | —                                                                                              | 200 OK com lista de `StockDTO`.   |
 | **GET** | `/api/Stock/{id}` | Retorna um estoque específico pelo ID.           | —                                                                                              | 200 OK (objeto) ou 404 Not Found. |
-| **PUT** | `/api/Stock/{id}` | Atualiza as informações de um estoque existente. | `json { "stockId": 1, "medicineId": 3, "locationIdStock": 2, "batchId": 4, "quantity": 250 } ` | 204 No Content ou 404 Not Found.  |
+| **PUT** | `/api/Stock/{id}` | Atualiza as informações de um estoque existente. | ```{ "stockId": 1, "medicineId": 3, "locationIdStock": 2, "batchId": 4, "quantity": 250 } ``` | 204 No Content ou 404 Not Found.  |
+| **GET** | `/api/Stock/search` | Busca estoques filtrando por medicamento, lote ou local. | — | 200 OK (resultado paginado + links). |
 
-OBS: Pelo intuito do PUT ser a ação de um operador atualizando apenas a quantidade do estoque, todas informações de id não devem ser alteradas no corpo.
+OBS: No PUT, o operador atualiza apenas a **quantidade** — IDs não devem ser alterados no corpo.
 
-### Exemplo de corpo de requisição
-```bash
+---
+
+
+---
+
+## 🔍 Exemplos de Requisições **Search** (Filtros, Paginação e Ordenação)
+
+### 👤 Users — `/api/UsersSys/search`
+
+**Parâmetros suportados**
+- `name` *(string, opcional)* — filtra por parte do nome
+- `login` *(string, opcional)* — filtra por parte do login
+- `roleUserId` *(long, opcional)* — filtra por perfil
+- `profUserId` *(long, opcional)* — filtra por profissão
+- `page` *(int, padrão: 1)* — página atual
+- `pageSize` *(int, padrão: 10)* — itens por página (máx. 100)
+- `sortBy` *(string, padrão: userId)* — campo de ordenação (ex.: `userId`, `nameUser`, `login`)
+- `sortDir` *(string, padrão: asc)* — `asc` ou `desc`
+
+**Exemplos**
+
+- **Básico (padrão):**
+  ```http
+  GET http://localhost:5000/api/UsersSys/search?page=1&pageSize=10&sortBy=userId&sortDir=asc
+  ```
+
+- **Filtrar por nome e perfil:**
+  ```http
+  GET http://localhost:5000/api/UsersSys/search?name=Maria&roleUserId=2&page=1&pageSize=5&sortBy=nameUser&sortDir=asc
+  ```
+
+- **Login contém “oli”, ordenando por nome desc, página 2:**
+  ```http
+  GET http://localhost:5000/api/UsersSys/search?login=oli&page=2&pageSize=5&sortBy=nameUser&sortDir=desc
+  ```
+
+- **cURL (exemplo equivalente):**
+  ```bash
+  curl -X GET "http://localhost:5000/api/UsersSys/search?name=Maria&roleUserId=2&page=1&pageSize=5&sortBy=nameUser&sortDir=asc"
+  ```
+
+---
+
+### 📦 Stock — `/api/Stock/search`
+
+**Parâmetros suportados**
+- `medicineId` *(long, opcional)* — filtra por medicamento
+- `locationIdStock` *(long, opcional)* — filtra por local/almoxarifado
+- `batchId` *(long, opcional)* — filtra por lote
+- `page` *(int, padrão: 1)* — página atual
+- `pageSize` *(int, padrão: 10)* — itens por página (máx. 100)
+- `sortBy` *(string, padrão: stockId)* — campo de ordenação (ex.: `stockId`, `medicineId`, `quantity`)
+- `sortDir` *(string, padrão: asc)* — `asc` ou `desc`
+
+**Exemplos**
+
+- **Básico (padrão):**
+  ```http
+  GET http://localhost:5000/api/Stock/search?page=1&pageSize=10&sortBy=stockId&sortDir=asc
+  ```
+
+- **Filtrar por medicamento e local:**
+  ```http
+  GET http://localhost:5000/api/Stock/search?medicineId=3&locationIdStock=2&page=1&pageSize=10&sortBy=quantity&sortDir=desc
+  ```
+
+- **Filtrar por lote específico (com ordenação asc):**
+  ```http
+  GET http://localhost:5000/api/Stock/search?batchId=15&sortBy=medicineId&sortDir=asc
+  ```
+
+- **cURL (exemplo equivalente):**
+  ```bash
+  curl -X GET "http://localhost:5000/api/Stock/search?medicineId=3&locationIdStock=2&page=1&pageSize=10&sortBy=quantity&sortDir=desc"
+  ```
+
+> **Resposta (modelo)**: os endpoints de busca retornam um `PagedResult` com `_links` de paginação (HATEOAS), por exemplo:
+```json
 {
-  "stockId": 15,
-  "medicineId": 15,
-  "locationIdStock": 2,
-  "batchId": 15,
-  "quantity": 10
+  "items": [
+    { "userId": 10, "nameUser": "Maria Oliveira", "login": "maria.oli", "roleUserId": 2, "profUserId": 3, "contactUserId": 7, "_links": [ /* ... */ ] }
+  ],
+  "pageInfo": { "page": 1, "pageSize": 5, "totalItems": 12, "totalPages": 3 },
+  "_links": [
+    { "rel": "self", "href": "/api/UsersSys/search?name=Maria&page=1&pageSize=5", "method": "GET" },
+    { "rel": "next", "href": "/api/UsersSys/search?name=Maria&page=2&pageSize=5", "method": "GET" }
+  ]
 }
 ```
 
 ---
-### 🗃️ Diagrama de Entidade-Relacionamento (DER)
+### 🧩 HATEOAS e Paginação
 
+A API segue o **nível 3 de maturidade RESTful (HATEOAS)**, retornando `_links` com ações relacionadas:
+```json
+{
+  "data": {
+    "userId": 10,
+    "nameUser": "Maria Oliveira"
+  },
+  "_links": [
+    { "rel": "self", "href": "/api/UsersSys/10", "method": "GET" },
+    { "rel": "delete", "href": "/api/UsersSys/10", "method": "DELETE" },
+    { "rel": "list", "href": "/api/UsersSys", "method": "GET" }
+  ]
+}
+```
+
+---
+
+### 🗃️ Diagrama de Entidade-Relacionamento (DER)
 <div align="center">
   <img src="images/der.jpg" alt="Diagrama DER" style="max-width: 90%; border: 1px solid #ddd; border-radius: 4px;">
 </div>
+
 ---
 
-### Desenho da Arquitetura
+### 🏗️ Desenho da Arquitetura
 <div align="center">
   <img src="images/diagrama2.png" alt="Desenho da Arquitetura" style="max-width: 90%; border: 1px solid #ddd; border-radius: 4px;">
 </div>
+
 ---
 
-## Como Rodar o Projeto
+## ⚙️ Como Rodar o Projeto
 
 ### Pré-requisitos
 
-1. **.NET 9.0**:
-   - Certifique-se de ter o **.NET 9.0 SDK** instalado em sua máquina.
-   - Você pode verificar se o **.NET 9.0** está instalado executando o comando no terminal:
-     ```bash
-     dotnet --version
-     ```
-   - Se não estiver instalado, você pode obter a versão mais recente do .NET [aqui](https://dotnet.microsoft.com/download).
+1. **.NET 9.0 SDK**
+2. **Oracle Database + ODP.NET**
+3. **Entity Framework Core com Oracle Provider**
+4. **Visual Studio ou Rider (opcional, mas recomendado)**
 
-2. **Banco de Dados Oracle**:
-   - O sistema utiliza **Oracle Database** para armazenar os dados. Você precisará de uma instância Oracle configurada e com as credenciais de acesso.
-   - Certifique-se de que o **Oracle Data Provider for .NET** (ODP.NET) esteja instalado e configurado para permitir a comunicação com o banco de dados Oracle.
-   - A conexão será configurada via **Entity Framework Core** para se conectar ao banco de dados Oracle.
+---
 
-3. **Entity Framework Core**:
-   - O projeto utiliza **Entity Framework Core** para acesso ao banco de dados Oracle. O provedor de banco de dados Oracle deve ser configurado corretamente.
-   - Se necessário, instale o pacote NuGet do **Oracle.EntityFrameworkCore**:
-     ```bash
-     dotnet add package Oracle.EntityFrameworkCore
-     ```
+### 🚀 Executando o Projeto
 
-### Rodando o Projeto
+1. **Clone o repositório**
+   ```bash
+   git clone https://github.com/Cleytonrik99/MedSave---DotNet.git
+   cd MedSave---DotNet
+   ```
 
-1. **Clone o Repositório**:
-   - Clone o repositório do projeto para sua máquina local:
-     ```bash
-     git clone <(https://github.com/Cleytonrik99/MedSave---DotNet.git)>
-     ```
+2. **Restaure as dependências**
+   ```bash
+   dotnet restore
+   ```
 
-2. **Instale as Dependências**:
-   - Navegue até o diretório do projeto no terminal e execute o seguinte comando para restaurar as dependências:
-     ```bash
-     dotnet restore
-     ```
+3. **Compile o projeto**
+   ```bash
+   dotnet build
+   ```
 
-3. **Configuração da Conexão com o Banco de Dados**:
-   - Certifique-se de que a string de conexão do banco de dados Oracle esteja configurada corretamente no arquivo **appsettings.json** ou nas variáveis de ambiente, como mostrado abaixo:
+4. **Configure a conexão com o banco**
+   - No `appsettings.json`, defina:
      ```json
      {
        "ConnectionStrings": {
-         "DefaultConnection": "User Id=<usuario>;Password=<senha>;Data Source=<host>:<porta>/<servico>"
+         "DefaultConnection": "User Id=USUARIO;Password=SENHA;Data Source=HOST:PORTA/SERVICO"
        }
      }
      ```
-   - Ajuste os valores de **usuario**, **senha**, **host**, **porta** e **serviço** conforme sua configuração do Oracle.
 
-4. **Aplicando as Migrations**:
-   - Se o banco de dados ainda não estiver configurado, você pode aplicar as migrations para criar as tabelas necessárias no banco de dados com o comando:
-     ```bash
-     dotnet ef database update
-     ```
-   - Isso irá aplicar as **migrations** criadas pelo Entity Framework e configurar o banco de dados conforme o modelo de dados.
+5. **Atualize o banco de dados (opcional)**
+   ```bash
+   dotnet ef database update
+   ```
 
-5. **Executando o Projeto**:
-   - Após a configuração, você pode executar o
+6. **Execute o servidor**
+   ```bash
+   dotnet run
+   ```
+   O servidor iniciará em:
+   ```
+   http://localhost:5000
+   ```
+
+7. **Acesse o Swagger**
+   Abra o navegador e vá até:
+   ```
+   http://localhost:5000/swagger
+   ```
+   Lá você poderá **testar todos os endpoints da API**, incluindo `GET`, `POST`, `PUT`, `DELETE` e `SEARCH`.
+
+---
