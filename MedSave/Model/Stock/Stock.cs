@@ -11,12 +11,12 @@ public class Stock
     public long MedicineId { get; set; }
     public Medicines Medicines { get; set; }
     
-    public long LocationIdStock { get; set; }
-    public LocationStock LocationStock { get; set; }
+    public long HealthcareProviderId { get; set; }
+    public HealthcareProviders HealthcareProviders { get; set; }
 
     public override string ToString()
     {
         return
-            $"{nameof(StockId)}: {StockId}, {nameof(Quantity)}: {Quantity}, {nameof(BatchId)}: {BatchId}, {nameof(MedicineId)}: {MedicineId},  {nameof(LocationIdStock)}: {LocationIdStock}";
+            $"{nameof(StockId)}: {StockId}, {nameof(Quantity)}: {Quantity}, {nameof(BatchId)}: {BatchId}, {nameof(MedicineId)}: {MedicineId},  {nameof(HealthcareProviderId)}: {HealthcareProviderId}";
     }
 }

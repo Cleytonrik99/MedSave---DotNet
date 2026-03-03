@@ -29,15 +29,15 @@ public class StockRepository : IStockRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<(IEnumerable<Stock> Items, int TotalItems)> SearchAsync(long? medicineId, long? locationIdStock, long? batchId, int page, int pageSize, string sortBy, string sortDir)
+    public async Task<(IEnumerable<Stock> Items, int TotalItems)> SearchAsync(long? medicineId, long? healthcareProviderId, long? batchId, int page, int pageSize, string sortBy, string sortDir)
     {
         var query = _context.Stock.AsQueryable();
 
         if (medicineId.HasValue)
             query = query.Where(s => s.MedicineId == medicineId.Value);
 
-        if (locationIdStock.HasValue)
-            query = query.Where(s => s.LocationIdStock == locationIdStock.Value);
+        if (healthcareProviderId.HasValue)
+            query = query.Where(s => s.HealthcareProviderId == healthcareProviderId.Value);
         
         if (batchId.HasValue)
             query = query.Where(s => s.BatchId == batchId.Value);
@@ -48,7 +48,7 @@ public class StockRepository : IStockRepository
         query = sortBy?.ToLowerInvariant() switch
         {
             "medicineid" => desc ? query.OrderByDescending(s => s.MedicineId) : query.OrderBy(s => s.MedicineId),
-            "locationidstock" => desc ? query.OrderByDescending(s => s.LocationIdStock) : query.OrderBy(s => s.LocationIdStock),
+            "healthcareProviderId" => desc ? query.OrderByDescending(s => s.HealthcareProviderId) : query.OrderBy(s => s.HealthcareProviderId),
             "batchid" => desc ? query.OrderByDescending(s => s.BatchId) : query.OrderBy(s => s.BatchId),
             "quantity" => desc ? query.OrderByDescending(s => s.Quantity) : query.OrderBy(s => s.Quantity),
             "stockid" => desc ? query.OrderByDescending(s => s.StockId) : query.OrderBy(s => s.StockId),

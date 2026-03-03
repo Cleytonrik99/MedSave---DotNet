@@ -28,7 +28,7 @@ public class StockService : IStockService
         {
             StockId = stock.StockId,
             MedicineId = stock.MedicineId,
-            LocationIdStock = stock.LocationIdStock,
+            HealthcareProviderId = stock.HealthcareProviderId, // Mudar
             BatchId = stock.BatchId,
             Quantity = stock.Quantity
         };
@@ -42,7 +42,7 @@ public class StockService : IStockService
         {
             StockId = stock.StockId,
             MedicineId = stock.MedicineId,
-            LocationIdStock = stock.LocationIdStock,
+            HealthcareProviderId = stock.HealthcareProviderId, // Mudar
             BatchId = stock.BatchId,
             Quantity = stock.Quantity
         }).ToList();
@@ -63,7 +63,7 @@ public class StockService : IStockService
         }
 
         existingStock.MedicineId = stockDto.MedicineId;
-        existingStock.LocationIdStock = stockDto.LocationIdStock;
+        existingStock.HealthcareProviderId = stockDto.HealthcareProviderId; // Mudar
         existingStock.BatchId = stockDto.BatchId;
         existingStock.Quantity = stockDto.Quantity;
 
@@ -72,7 +72,7 @@ public class StockService : IStockService
     
     public async Task<PagedResult<StockDTO>> SearchAsync(
         long? medicineId,
-        long? locationIdStock,
+        long? healthcareProviderId, // Mudar
         long? batchId,
         int page,
         int pageSize,
@@ -85,7 +85,7 @@ public class StockService : IStockService
         if (pageSize > 100) pageSize = 100;
 
         var (items, total) = await _stockRepository.SearchAsync(
-            medicineId, locationIdStock, batchId,
+            medicineId, healthcareProviderId, batchId,
             page, pageSize, sortBy ?? "stockId", sortDir ?? "asc"
         );
 
@@ -93,7 +93,7 @@ public class StockService : IStockService
         {
             StockId = stock.StockId,
             MedicineId = stock.MedicineId,
-            LocationIdStock = stock.LocationIdStock,
+            HealthcareProviderId = stock.HealthcareProviderId, // Mudar
             BatchId = stock.BatchId,
             Quantity = stock.Quantity
         }).ToList();

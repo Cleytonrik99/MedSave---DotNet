@@ -10,7 +10,7 @@ public interface IStockRepository
 
     Task<(IEnumerable<Stock> Items, int TotalItems)> SearchAsync(
         long? medicineId,
-        long? locationIdStock,
+        long? HealthcareProviderId,
         long? batchId,
         int page,
         int pageSize,

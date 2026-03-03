@@ -158,7 +158,7 @@ namespace MedSave.Controllers
         [HttpGet("search")]
         public async Task<IActionResult> Search(
             [FromQuery] long? medicineId,
-            [FromQuery] long? locationIdStock,
+            [FromQuery] long? healthcareProviderId,
             [FromQuery] long? batchId,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
@@ -168,7 +168,7 @@ namespace MedSave.Controllers
             try
             {
                 var result = await _stockService.SearchAsync(
-                    medicineId, locationIdStock, batchId,
+                    medicineId, healthcareProviderId, batchId,
                     page, pageSize, sortBy, sortDir
                 );
 
@@ -186,7 +186,7 @@ namespace MedSave.Controllers
                         page: result.PageInfo.Page,
                         pageSize: result.PageInfo.PageSize,
                         totalPages: result.PageInfo.TotalPages,
-                        filters: new { medicineId, locationIdStock, batchId, sortBy, sortDir }
+                        filters: new { medicineId, healthcareProviderId, batchId, sortBy, sortDir }
                     )
                 };
 

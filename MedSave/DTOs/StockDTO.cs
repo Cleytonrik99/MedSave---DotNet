@@ -6,5 +6,5 @@ public class StockDTO
     public int Quantity { get; set; }
     public long BatchId { get; set; }
     public long MedicineId { get; set; }
-    public long LocationIdStock { get; set; }
+    public long HealthcareProviderId { get; set; }
 }

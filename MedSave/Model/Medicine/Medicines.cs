@@ -6,6 +6,8 @@ public class Medicines
     public string NameMedication { get; set; }
     public string StatusMed { get; set; }
     
+    public string AnvisaCode { get; set; }
+    
     public long CategoryMedId { get; set; }
     public CategoryMedicine CategoryMedicine { get; set; }
     

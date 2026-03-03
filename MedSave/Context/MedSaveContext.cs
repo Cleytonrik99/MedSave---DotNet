@@ -15,7 +15,7 @@ public class MedSaveContext : DbContext
     public DbSet<City> City { get; set; }
     public DbSet<ContactManufacturer> ContactManufacturer { get; set; }
     public DbSet<ContactUser> ContactUser { get; set; }
-    public DbSet<LocationStock> LocationStock { get; set; }
+    public DbSet<HealthcareProviders> HealthcareProviders { get; set; }
     public DbSet<Manufacturer> Manufacturer { get; set; }
     public DbSet<MedicineActiveIngr> MedicineActiveIngr { get; set; }
     public DbSet<MedicineDispense> MedicineDispense { get; set; }
@@ -292,37 +292,47 @@ public class MedSaveContext : DbContext
                 .HasDatabaseName("UK_CONTACT_USER_PHONE");
         });
 
-        modelBuilder.Entity<LocationStock>(entity =>
+        modelBuilder.Entity<HealthcareProviders>(entity =>
         {
-            entity.ToTable("LOCATION_STOCK");
+            entity.ToTable("HEALTHCARE_PROVIDERS");
 
-            entity.HasKey(e => e.LocationIdStock)
-                .HasName("PK_LOCATION_STOCK");
+            entity.HasKey(e => e.HealthcareProviderId)
+                .HasName("PK_HEALTHCARE_PROVIDERS");
 
-            entity.Property(e => e.LocationIdStock)
-                .HasColumnName("LOCATION_ID_STOCK")
+            entity.Property(e => e.HealthcareProviderId)
+                .HasColumnName("HEALTHCARE_PROVIDER_ID")
                 .HasColumnType("NUMBER")
                 .ValueGeneratedOnAdd();
 
-            entity.Property(e => e.NameLocation)
-                .HasColumnName("NAME_LOCATION")
+            entity.Property(e => e.ProviderName)
+                .HasColumnName("PROVIDER_NAME")
                 .HasColumnType("VARCHAR2(30)")
                 .IsRequired();
 
-            entity.Property(e => e.LocationStockName)
-                .HasColumnName("LOCATION_STOCK_NAME")
+            entity.Property(e => e.HealthcareProviderName)
+                .HasColumnName("HEALTHCARE_PROVIDER_NAME")
                 .HasColumnType("VARCHAR2(100)")
                 .IsRequired();
+
+            entity.Property(e => e.ProviderTypeId)
+                .HasColumnName("PROVIDER_TYPE_ID")
+                .HasColumnType("NUMBER")
+                .IsRequired();
+
+            entity.HasOne(e => e.ProviderType)
+                .WithMany()
+                .HasForeignKey(e => e.ProviderTypeId)
+                .HasConstraintName("FK_PROVIDER_TYPE_HEALTHCARE_PROVIDERS");
             
             entity.Property(e => e.AddressIdStock)
                 .HasColumnName("ADDRESS_ID_STOCK")
                 .HasColumnType("NUMBER")
                 .IsRequired();
 
-            entity.HasOne(e => e.AddressStock)
+            entity.HasOne(e => e.AddressStock) 
                 .WithOne()
-                .HasForeignKey<LocationStock>(e => e.AddressIdStock)
-                .HasConstraintName("FK_ADDRESS_STOCK_LOCATION_STOCK");
+                .HasForeignKey<HealthcareProviders>(e => e.AddressIdStock)
+                .HasConstraintName("FK_ADDRESS_STOCK_HEALTHCARE_PROVIDERS");
         });
 
         modelBuilder.Entity<Manufacturer>(entity =>
@@ -497,6 +507,15 @@ public class MedSaveContext : DbContext
                 .HasColumnName("NAME_MEDICATION")
                 .HasColumnType("VARCHAR2(255)")
                 .IsRequired();
+
+            entity.Property(e => e.AnvisaCode)
+                .HasColumnName("ANVISA_CODE")
+                .HasColumnType("VARCHAR2(30)")
+                .IsRequired();
+
+            entity.HasIndex(e => e.AnvisaCode)
+                .IsUnique()
+                .HasDatabaseName("UK_ANVISA_CODE");
 
             entity.Property(e => e.StatusMed)
                 .HasColumnName("STATUS_MED")
@@ -679,14 +698,14 @@ public class MedSaveContext : DbContext
                 .HasForeignKey(e => e.MedicineId)
                 .HasConstraintName("FK_MEDICINES_STOCK");
 
-            entity.Property(e => e.LocationIdStock)
+            entity.Property(e => e.HealthcareProviderId)
                 .HasColumnName("LOCATION_ID_STOCK")
                 .HasColumnType("NUMBER")
                 .IsRequired();
 
-            entity.HasOne(e => e.LocationStock)
+            entity.HasOne(e => e.HealthcareProviders) 
                 .WithMany()
-                .HasForeignKey(e => e.LocationIdStock)
+                .HasForeignKey(e => e.HealthcareProviderId)
                 .HasConstraintName("FK_LOCATION_STOCK_STOCK");
         });
 
