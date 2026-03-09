@@ -7,6 +7,14 @@ namespace MedSave.Context;
 
 public class MedSaveContext : DbContext
 {
+
+    private readonly IConfiguration _configuration;
+
+    public MedSaveContext(DbContextOptions<MedSaveContext> options, IConfiguration configuration) : base(options)
+    {
+        _configuration = configuration;
+    }
+    
     public DbSet<ActiveIngredient> ActiveIngredient { get; set; }
     public DbSet<AddressManufacturer> AddressManufacturer { get; set; }
     public DbSet<AddressStock> AddressStock { get; set; }
@@ -34,7 +42,9 @@ public class MedSaveContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseOracle(ConfigurationManager.ConnectionStrings["MedSave"]?.ConnectionString ?? "Data Source=//oracle.fiap.com.br:1521/orcl;User Id=rm560485; Password=fiap25;");
+        var connectionString = _configuration.GetConnectionString("DefaultConnection");
+        
+        optionsBuilder.UseOracle(connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -699,14 +709,14 @@ public class MedSaveContext : DbContext
                 .HasConstraintName("FK_MEDICINES_STOCK");
 
             entity.Property(e => e.HealthcareProviderId)
-                .HasColumnName("LOCATION_ID_STOCK")
+                .HasColumnName("HEALTHCARE_PROVIDER_ID")
                 .HasColumnType("NUMBER")
                 .IsRequired();
 
             entity.HasOne(e => e.HealthcareProviders) 
                 .WithMany()
                 .HasForeignKey(e => e.HealthcareProviderId)
-                .HasConstraintName("FK_LOCATION_STOCK_STOCK");
+                .HasConstraintName("FK_HEALTHCARE_PROVIDER_STOCK");
         });
 
         modelBuilder.Entity<StockMovement>(entity =>
