@@ -9,7 +9,7 @@ public class MedSaveContext : DbContext
 {
 
     private readonly IConfiguration _configuration;
- 
+
     public MedSaveContext(DbContextOptions<MedSaveContext> options, IConfiguration configuration) : base(options)
     {
         _configuration = configuration;
