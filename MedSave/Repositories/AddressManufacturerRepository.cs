@@ -49,9 +49,23 @@ public class AddressManufacturerRepository : IAddressManufacturerRepository
 
     public async Task AddAsync(AddressManufacturer addressManufacturer)
     {
-        var search = await GetAllAsync();
-
         _context.AddressManufacturer.Add(addressManufacturer);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(AddressManufacturer addressManufacturer)
+    {
+        _context.AddressManufacturer.Update(addressManufacturer);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(long id)
+    {
+        var search = await _context.AddressManufacturer.FindAsync(id);
+        if (search != null)
+        {
+            _context.AddressManufacturer.Remove(search);
+            await _context.SaveChangesAsync();
+        }
     }
 }
