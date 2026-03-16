@@ -69,4 +69,38 @@ public class ManufacturerRepository : IManufacturerRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<(IEnumerable<Manufacturer> Items, int TotalItems)> SearchAsync(int? cnpj, long? contactManuId, long? addressIdManufacturer, int page, int pageSize, string sortBy, string sortDir)
+    {
+        var query = _context.Manufacturer.AsQueryable();
+
+        if (cnpj.HasValue)
+            query = query.Where(m => m.Cnpj == cnpj.Value);
+
+        if (contactManuId.HasValue)
+            query = query.Where(m => m.ContactManuId == contactManuId.Value);
+
+        if (addressIdManufacturer.HasValue)
+            query = query.Where(m => m.AddressIdManufacturer == addressIdManufacturer.Value);
+
+        var totalItems = await query.CountAsync();
+        
+        bool desc = string.Equals(sortDir, "desc", StringComparison.OrdinalIgnoreCase);
+        query = sortBy?.ToLowerInvariant() switch
+        {
+            "cnpj" => desc ? query.OrderByDescending(m => m.Cnpj) : query.OrderBy(m => m.Cnpj),
+            "contactManuId" => desc ? query.OrderByDescending(m => m.ContactManuId) : query.OrderBy(m => m.ContactManuId),
+            "addressIdManufacturer" => desc ? query.OrderByDescending(m => m.AddressIdManufacturer) : query.OrderBy(m => m.AddressIdManufacturer),
+            _ => desc ? query.OrderByDescending(m => m.ManufacId) : query.OrderBy(m => m.ManufacId)
+        };
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+        if (pageSize > 100) pageSize = 100;
+
+        var skip = (page - 1) * pageSize;
+
+        var data = await query.Skip(skip).Take(pageSize).ToListAsync();
+
+        return (data, totalItems);
+    }
 }

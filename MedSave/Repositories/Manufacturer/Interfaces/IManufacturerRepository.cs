@@ -9,4 +9,14 @@ public interface IManufacturerRepository
     Task AddAsync(Manufacturer manufacturer);
     Task UpdateAsync(Manufacturer manufacturer);
     Task DeleteAsync(long id);
+
+    Task<(IEnumerable<Manufacturer> Items, int TotalItems)> SearchAsync(
+        int? cnpj,
+        long? contactManuId,
+        long? addressIdManufacturer,
+        int page,
+        int pageSize,
+        string sortBy,
+        string sortDir
+    );
 }
