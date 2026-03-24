@@ -17,11 +17,6 @@ public class ManufacturerRepository : IManufacturerRepository
     {
         public NotFoundException(string message) : base(message) {}
     }
-    
-    public class DuplicateRecordException : Exception
-    {
-        public DuplicateRecordException(string message) : base(message) { }
-    }
 
     public async Task<Manufacturer?> GetByIdAsync(long id)
     {

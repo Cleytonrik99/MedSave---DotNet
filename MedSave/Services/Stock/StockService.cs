@@ -28,7 +28,7 @@ public class StockService : IStockService
         {
             StockId = stock.StockId,
             MedicineId = stock.MedicineId,
-            HealthcareProviderId = stock.HealthcareProviderId, // Mudar
+            HealthcareProviderId = stock.HealthcareProviderId,
             BatchId = stock.BatchId,
             Quantity = stock.Quantity
         };

@@ -6,12 +6,13 @@ public interface IManufacturerService
 {
     Task<ManufacturerDTO?> GetByIdAsync(long id);
     Task<IEnumerable<ManufacturerDTO>> GetAllAsync();
-    Task<ManufacturerDTO?> AddAsync(ManufacturerDTO manufacturerDto);
+    Task<ManufacturerDTO?> AddAsync(ManufacturerDTO manufacturerDto, AddressManufacturerDTO addressManufacturerDto, ContactManufacturerDTO contactManufacturerDto);
     Task UpdateAsync(ManufacturerDTO manufacturerDto, AddressManufacturerDTO addressManufacturerDto, ContactManufacturerDTO contactManufacturerDto);
     Task DeleteAsync(long id);
     Task<PagedResult<ManufacturerDTO>> SearchAsync(
-        string? nameManu,
         int? cnpj,
+        long? contactManuId,
+        long? addressIdManufacturer,
         int page,
         int pageSize,
         string sortBy,
