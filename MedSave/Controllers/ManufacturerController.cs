@@ -1,0 +1,190 @@
+﻿using MedSave.DTOs;
+using MedSave.DTOs.Hypermedia;
+using MedSave.Repositories;
+using MedSave.Services.Manufacturer;
+using Microsoft.AspNetCore.Mvc;
+
+namespace MedSave.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ManufacturerController : ControllerBase
+{
+    private readonly IManufacturerService _manufacturerService;
+
+    public ManufacturerController(IManufacturerService manufacturerService)
+    {
+        _manufacturerService = manufacturerService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        try
+        {
+            var dtos = await _manufacturerService.GetAllAsync();
+
+            var items = dtos.Select(d => new Resource<ManufacturerDTO>
+            {
+                Data = d
+            });
+
+            var collection = new CollectionResource<ManufacturerDTO>
+            {
+                Items = items,
+                PageInfo = new { page = 1, pageSize = dtos.Count(), totalItems = dtos.Count(), totalPages = 1 }
+            };
+
+            return Ok(collection);
+        }
+        catch (ManufacturerRepository.NotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = "Internal error when searching for the manufacturers",
+                details = ex.Message
+            });
+        }
+    }
+
+    [HttpGet("{id:long}")]
+    public async Task<IActionResult> GetById(long id)
+    {
+        try
+        {
+            var dto = await _manufacturerService.GetByIdAsync(id);
+
+            return Ok(dto);
+        }
+
+        catch (ManufacturerRepository.NotFoundException ex)
+        {
+            return StatusCode(404, ex.Message);
+        }
+        
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = "Internal error when searching for the manufacturer",
+                details = ex.Message
+            });
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddManufacturer([FromBody] CreateManufacturerRequest req)
+    {
+        try
+        {
+            var created = await _manufacturerService.AddAsync(req.ManufacturerDto, req.AddressManufacturerDto, req.ContactManufacturerDto);
+            
+            return CreatedAtAction(nameof(GetById), new {id = created.ManufacId}, created);
+        }
+
+        catch (ArgumentNullException ex)
+        {
+            return BadRequest(new { message = "Invalid request body." });
+        }
+
+        catch (ManufacturerService.ConflictException ex)
+        {
+            return StatusCode(409, new { message = "CNPJ already registered." });
+        }
+        
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = "Internal error when adding the manufacturer",
+                details = ex.Message
+            });
+        }
+        
+        /*
+         Exemplo de requisição
+         
+         { "manufacturerDto": { "nameManu": "manufacturerdasilva", "cnpj": 12345678912345 }, 
+          "contactManufacturerDto": { "emailManu": "manufac@manufac.com", "phoneNumberManu": 11987760601 }, 
+          "addressManufacturerDto": { "complement": "N/A", "numberManu": 1234, "addressDescription": "Rua Bloblis", "cep": 12345678, "neighId": 1 } }
+         
+         */
+        
+    }
+
+    [HttpPut("{id:long}")]
+    public async Task<IActionResult> UpdateManufacturer(long id, [FromBody] ManufacturerDTO dto)
+    {
+        try
+        {
+            dto.ManufacId = id;
+
+            await _manufacturerService.UpdateAsync(id, dto);
+            return StatusCode(200, new { message = $"Manufacturer with id {id} updated" });
+        }
+
+        catch (ManufacturerService.NotFoundException ex)
+        {
+            return NotFound(new { message = $"Manufacturer with Id {id} not found" });
+        }
+        
+        catch (ArgumentNullException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = "Internal error when adding the manufacturer",
+                details = ex.Message
+            });
+        }
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> Search(
+        [FromQuery] int? cnpj,
+        [FromQuery] long? contactManuId,
+        [FromQuery] long? addressIdManufacturer,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string sortBy = "manufacId",
+        [FromQuery] string sortDir = "asc"
+    )
+    {
+        try
+        {
+            var result = await _manufacturerService.SearchAsync(cnpj, contactManuId, addressIdManufacturer, page, pageSize, sortBy, sortDir);
+
+            return Ok(new { Items = result.Items, PageInfo = result.PageInfo });
+        }
+
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = "Internal error when searching the manufacturer",
+                details = ex.Message
+            });
+        }
+    }
+    
+}
+
+public class CreateManufacturerRequest
+{
+    public ManufacturerDTO ManufacturerDto { get; set; } = default!;
+    public ContactManufacturerDTO ContactManufacturerDto { get; set; } = default!;
+    public AddressManufacturerDTO AddressManufacturerDto { get; set; } = default!;
+}

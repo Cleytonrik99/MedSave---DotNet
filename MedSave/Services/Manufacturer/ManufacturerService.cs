@@ -2,6 +2,7 @@
 using MedSave.DTOs;
 using MedSave.Model;
 using MedSave.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace MedSave.Services.Manufacturer;
 
@@ -24,15 +25,15 @@ public class ManufacturerService : IManufacturerService
     {
         public ConflictException(string message) : base(message) {}
     }
+    
+    public class NotFoundException : Exception
+    {
+        public NotFoundException(string message) : base(message) {}
+    }
 
     public async Task<ManufacturerDTO?> GetByIdAsync(long id)
     {
         var manufac = await _manufacturerRepository.GetByIdAsync(id);
-
-        if (manufac == null)
-        {
-            throw new Exception($"Manufacturer with ID {id} not founded.");
-        }
 
         return new ManufacturerDTO
         {
@@ -64,7 +65,7 @@ public class ManufacturerService : IManufacturerService
         if (addressManufacturerDto == null) throw new ArgumentNullException(nameof(addressManufacturerDto));
         if (contactManufacturerDto == null) throw new ArgumentNullException(nameof(contactManufacturerDto));
 
-        var search = await _context.Manufacturer.FindAsync(manufacturerDto.Cnpj);
+        var search = await _context.Manufacturer.FirstOrDefaultAsync(m => m.Cnpj == manufacturerDto.Cnpj);
 
         if (search != null) throw new ConflictException("CNPJ Already registered");
 
@@ -89,8 +90,8 @@ public class ManufacturerService : IManufacturerService
 
         var manufacturer = new Model.Manufacturer
         {
-            AddressIdManufacturer = addressManufacturerDto.AddressIdManufacturer,
-            ContactManuId = contactManufacturerDto.ContactManuId,
+            AddressIdManufacturer = address.AddressIdManufacturer,
+            ContactManuId = contact.ContactManuId,
             Cnpj = manufacturerDto.Cnpj,
             NameManu = manufacturerDto.NameManu
         };
@@ -99,35 +100,48 @@ public class ManufacturerService : IManufacturerService
 
         return new ManufacturerDTO
         {
-            ManufacId = manufacturerDto.ManufacId,
-            AddressIdManufacturer = addressManufacturerDto.AddressIdManufacturer,
-            ContactManuId = contactManufacturerDto.ContactManuId,
-            Cnpj = manufacturerDto.Cnpj,
-            NameManu = manufacturerDto.NameManu
+            ManufacId = manufacturer.ManufacId,
+            AddressIdManufacturer = manufacturer.AddressIdManufacturer,
+            ContactManuId = manufacturer.ContactManuId,
+            Cnpj = manufacturer.Cnpj,
+            NameManu = manufacturer.NameManu
         };
     }
 
-    public async Task UpdateAsync(ManufacturerDTO manufacturerDto, AddressManufacturerDTO addressManufacturerDto, ContactManufacturerDTO contactManufacturerDto)
+    public async Task UpdateAsync(long id, ManufacturerDTO manufacturerDto)
     {
         if (manufacturerDto == null)
         {
             throw new ArgumentNullException(nameof(manufacturerDto), "Manufacturer Object can't be null.");
         }
 
-        var existingManufacturer = await _manufacturerRepository.GetByIdAsync(manufacturerDto.ManufacId);
-
-        if (existingManufacturer == null)
+        try
         {
-            throw new Exception($"Manufacturer with ID {manufacturerDto.ManufacId} not founded.");
+            var existingManufacturer = await _manufacturerRepository.GetByIdAsync(id);
+
+            if (manufacturerDto.AddressIdManufacturer == 0)
+            {
+                throw new ArgumentNullException(nameof(manufacturerDto), "Address Id Manufacturer can't be null or zero");
+            }
+
+            if (manufacturerDto.ContactManuId == 0)
+            {
+                throw new ArgumentNullException(nameof(manufacturerDto), "Contact Manu Id can't be null or zero.");
+            }
+
+            existingManufacturer.AddressIdManufacturer = manufacturerDto.AddressIdManufacturer;
+            existingManufacturer.Cnpj = manufacturerDto.Cnpj;
+            existingManufacturer.ContactManuId = manufacturerDto.ContactManuId;
+            existingManufacturer.ManufacId = manufacturerDto.ManufacId;
+            existingManufacturer.NameManu = manufacturerDto.NameManu;
+
+            await _manufacturerRepository.UpdateAsync(existingManufacturer);
         }
-
-        existingManufacturer.AddressIdManufacturer = manufacturerDto.AddressIdManufacturer;
-        existingManufacturer.Cnpj = manufacturerDto.Cnpj;
-        existingManufacturer.ContactManuId = manufacturerDto.ContactManuId;
-        existingManufacturer.ManufacId = manufacturerDto.ManufacId;
-        existingManufacturer.NameManu = manufacturerDto.NameManu;
-
-        await _manufacturerRepository.UpdateAsync(existingManufacturer);
+        
+        catch (ManufacturerRepository.NotFoundException ex)
+        {
+            throw new NotFoundException($"Manufacturer with Id {id} not found.");
+        }
     }
 
     public async Task DeleteAsync(long id)

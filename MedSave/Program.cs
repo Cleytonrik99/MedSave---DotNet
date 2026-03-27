@@ -1,6 +1,7 @@
 ﻿using MedSave.Context;
 using MedSave.Repositories;
 using MedSave.Services;
+using MedSave.Services.Manufacturer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,11 @@ builder.Services.AddDbContext<MedSaveContext>();
 builder.Services.AddScoped<UsersSysRepository>();
 builder.Services.AddScoped<ContactUserRepository>();
 builder.Services.AddScoped<IStockRepository, StockRepository>();
+builder.Services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+builder.Services.AddScoped<IAddressManufacturerRepository, AddressManufacturerRepository>();
+builder.Services.AddScoped<IContactManufacturerRepository, ContactManufacturerRepository>();
+
+builder.Services.AddScoped<IManufacturerService, ManufacturerService>();
 builder.Services.AddScoped<IUsersSysService, UsersSysService>();
 builder.Services.AddScoped<IStockService, StockService>();
 
