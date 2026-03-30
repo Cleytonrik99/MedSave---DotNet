@@ -1,4 +1,4 @@
-﻿namespace MedSave.DTOs;
+﻿namespace MedSave.DTOs.Stock;
 
 public class StockDTO
 {

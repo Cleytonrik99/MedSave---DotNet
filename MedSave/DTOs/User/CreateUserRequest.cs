@@ -1,4 +1,6 @@
-﻿namespace MedSave.DTOs;
+﻿using MedSave.DTOs.User;
+
+namespace MedSave.DTOs;
 
 public class CreateUserRequest
 {

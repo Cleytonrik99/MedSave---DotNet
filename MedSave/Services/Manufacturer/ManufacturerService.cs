@@ -1,5 +1,6 @@
 ﻿using MedSave.Context;
 using MedSave.DTOs;
+using MedSave.DTOs.Manufacturer;
 using MedSave.Model;
 using MedSave.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,10 @@ public class ManufacturerService : IManufacturerService
     public async Task<ManufacturerDTO?> GetByIdAsync(long id)
     {
         var manufac = await _manufacturerRepository.GetByIdAsync(id);
+
+        var contact = await _contactManufacturerRepository.GetByIdAsync(manufac.ContactManuId);
+
+        var address = await _addressManufacturerRepository.GetByIdAsync(manufac.AddressIdManufacturer);
 
         return new ManufacturerDTO
         {

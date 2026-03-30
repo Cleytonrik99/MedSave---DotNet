@@ -1,4 +1,4 @@
-﻿namespace MedSave.DTOs;
+﻿namespace MedSave.DTOs.Manufacturer;
 
 public class ContactManufacturerDTO
 {

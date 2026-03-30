@@ -1,5 +1,6 @@
 ﻿using MedSave.DTOs;
 using MedSave.DTOs.Hypermedia;
+using MedSave.DTOs.Manufacturer;
 using MedSave.Repositories;
 using MedSave.Services.Manufacturer;
 using Microsoft.AspNetCore.Mvc;
@@ -204,11 +205,4 @@ public class ManufacturerController : ControllerBase
         }
     }
     
-}
-
-public class CreateManufacturerRequest
-{
-    public ManufacturerDTO ManufacturerDto { get; set; } = default!;
-    public ContactManufacturerDTO ContactManufacturerDto { get; set; } = default!;
-    public AddressManufacturerDTO AddressManufacturerDto { get; set; } = default!;
 }

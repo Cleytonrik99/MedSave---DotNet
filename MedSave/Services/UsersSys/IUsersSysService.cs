@@ -1,4 +1,5 @@
 ﻿using MedSave.DTOs;
+using MedSave.DTOs.User;
 
 namespace MedSave.Services;
 
