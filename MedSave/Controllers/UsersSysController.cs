@@ -198,7 +198,7 @@ public class UsersSysController : ControllerBase
     [HttpGet("search")]
     public async Task<IActionResult> Search(
         [FromQuery] string? name,
-        [FromQuery] string? login,
+        [FromQuery] string? Email,
         [FromQuery] long? roleUserId,
         [FromQuery] long? profUserId,
         [FromQuery] int page = 1,
@@ -209,7 +209,7 @@ public class UsersSysController : ControllerBase
         try
         {
             var result = await _usersSysService.SearchAsync(
-                name, login, roleUserId, profUserId,
+                name, Email, roleUserId, profUserId,
                 page, pageSize, sortBy, sortDir
             );
 
@@ -227,7 +227,7 @@ public class UsersSysController : ControllerBase
                     page: result.PageInfo.Page,
                     pageSize: result.PageInfo.PageSize,
                     totalPages: result.PageInfo.TotalPages,
-                    filters: new { name, login, roleUserId, profUserId, sortBy, sortDir }
+                    filters: new { name, Email, roleUserId, profUserId, sortBy, sortDir }
                 )
             };
 

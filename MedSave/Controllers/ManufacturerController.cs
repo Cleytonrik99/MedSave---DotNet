@@ -16,7 +16,7 @@ public class ManufacturerController : ControllerBase
     {
         _manufacturerService = manufacturerService;
     }
-
+    
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -24,18 +24,17 @@ public class ManufacturerController : ControllerBase
         {
             var dtos = await _manufacturerService.GetAllAsync();
 
-            var items = dtos.Select(d => new Resource<ManufacturerDTO>
+            return Ok(new
             {
-                Data = d
+                items = dtos,
+                pageInfo = new
+                {
+                    page = 1,
+                    pageSize = dtos.Count(),
+                    totalItems = dtos.Count(),
+                    totalPages = 1
+                }
             });
-
-            var collection = new CollectionResource<ManufacturerDTO>
-            {
-                Items = items,
-                PageInfo = new { page = 1, pageSize = dtos.Count(), totalItems = dtos.Count(), totalPages = 1 }
-            };
-
-            return Ok(collection);
         }
         catch (ManufacturerRepository.NotFoundException ex)
         {
@@ -142,6 +141,31 @@ public class ManufacturerController : ControllerBase
             return StatusCode(500, new
             {
                 message = "Internal error when adding the manufacturer",
+                details = ex.Message
+            });
+        }
+    }
+
+    [HttpDelete("{id:long}")]
+    public async Task<IActionResult> DeleteManufacturer(long id)
+    {
+        try
+        {
+            await _manufacturerService.DeleteAsync(id);
+
+            return Ok(new { message = $"Manufacturer with Id {id} deleted" });
+        }
+        
+        catch (ManufacturerService.NotFoundException ex)
+        {
+            return NotFound(new { message = $"Manufacturer with Id {id} not found" });
+        }
+        
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = "Internal error when deleting the manufacturer",
                 details = ex.Message
             });
         }

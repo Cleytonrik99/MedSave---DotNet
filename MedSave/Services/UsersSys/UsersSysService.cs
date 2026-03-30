@@ -28,7 +28,7 @@ public class UsersSysService : IUsersSysService
         {
             UserId = user.UserId,
             NameUser = user.NameUser,
-            Login = user.Login,
+            Email = user.Email,
             PasswordUser = user.PasswordUser,
             RoleUserId = user.RoleUserId,
             ProfUserId = user.ProfUserId,
@@ -44,7 +44,7 @@ public class UsersSysService : IUsersSysService
         {
             UserId = user.UserId,
             NameUser = user.NameUser,
-            Login = user.Login,
+            Email = user.Email,
             RoleUserId = user.RoleUserId,
             ProfUserId = user.ProfUserId,
             ContactUserId = user.ContactUserId
@@ -67,7 +67,7 @@ public class UsersSysService : IUsersSysService
         var user = new UsersSys
         {
             NameUser = usersSysDto.NameUser,
-            Login = usersSysDto.Login,
+            Email = usersSysDto.Email,
             PasswordUser = usersSysDto.PasswordUser, // ideal: hashear
             RoleUserId = usersSysDto.RoleUserId,
             ProfUserId = usersSysDto.ProfUserId,
@@ -80,7 +80,7 @@ public class UsersSysService : IUsersSysService
         {
             UserId = user.UserId,
             NameUser = user.NameUser,
-            Login = user.Login,
+            Email = user.Email,
             PasswordUser = "***",
             RoleUserId = user.RoleUserId,
             ProfUserId = user.ProfUserId,
@@ -107,7 +107,7 @@ public class UsersSysService : IUsersSysService
 
     public async Task<PagedResult<UsersSysDTO>> SearchAsync(
         string? name,
-        string? login,
+        string? Email,
         long? roleUserId,
         long? profUserId,
         int page,
@@ -122,7 +122,7 @@ public class UsersSysService : IUsersSysService
         sortDir ??= "asc";
 
         var (items, total) = await _usersSysRepository.SearchAsync(
-            name, login, roleUserId, profUserId,
+            name, Email, roleUserId, profUserId,
             page, pageSize, sortBy, sortDir
         );
 
@@ -130,7 +130,7 @@ public class UsersSysService : IUsersSysService
         {
             UserId = user.UserId,
             NameUser = user.NameUser,
-            Login = user.Login,
+            Email = user.Email,
             PasswordUser = "***",
             RoleUserId = user.RoleUserId,
             ProfUserId = user.ProfUserId,

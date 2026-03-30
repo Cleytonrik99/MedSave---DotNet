@@ -70,7 +70,7 @@ public class UsersSysRepository : IUsersSysRepository
     
     public async Task<(IEnumerable<UsersSys> Items, int TotalItems)> SearchAsync(
         string? name,
-        string? login,
+        string? Email,
         long? roleUserId,
         long? profUserId,
         int page,
@@ -86,10 +86,10 @@ public class UsersSysRepository : IUsersSysRepository
             query = query.Where(u => u.NameUser.ToLower().Contains(n));
         }
 
-        if (!string.IsNullOrWhiteSpace(login))
+        if (!string.IsNullOrWhiteSpace(Email))
         {
-            var l = login.Trim().ToLower();
-            query = query.Where(u => u.Login.ToLower().Contains(l));
+            var l = Email.Trim().ToLower();
+            query = query.Where(u => u.Email.ToLower().Contains(l));
         }
 
         if (roleUserId.HasValue)
@@ -104,7 +104,7 @@ public class UsersSysRepository : IUsersSysRepository
         query = (sortBy ?? "").ToLowerInvariant() switch
         {
             "nameuser"   => desc ? query.OrderByDescending(u => u.NameUser)   : query.OrderBy(u => u.NameUser),
-            "login"      => desc ? query.OrderByDescending(u => u.Login)      : query.OrderBy(u => u.Login),
+            "Email"      => desc ? query.OrderByDescending(u => u.Email)      : query.OrderBy(u => u.Email),
             "roleuserid" => desc ? query.OrderByDescending(u => u.RoleUserId) : query.OrderBy(u => u.RoleUserId),
             "profuserid" => desc ? query.OrderByDescending(u => u.ProfUserId) : query.OrderBy(u => u.ProfUserId),
             "userid"     => desc ? query.OrderByDescending(u => u.UserId)     : query.OrderBy(u => u.UserId),

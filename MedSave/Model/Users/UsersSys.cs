@@ -4,7 +4,7 @@ public class UsersSys
 {
     public long UserId { get; set; }
     public string NameUser { get; set; }
-    public string Login { get; set; }
+    public string Email { get; set; }
     public string PasswordUser { get; set; }
     
     public long RoleUserId { get; set; }
@@ -19,6 +19,6 @@ public class UsersSys
     public override string ToString()
     {
         return
-            $"{nameof(UserId)}: {UserId}, {nameof(NameUser)}: {NameUser}, {nameof(Login)}: {Login}, {nameof(PasswordUser)}: {PasswordUser}, {nameof(RoleUserId)}: {RoleUserId}, {nameof(ProfUserId)}: {ProfUserId}, {nameof(ContactUserId)}: {ContactUserId}";
+            $"{nameof(UserId)}: {UserId}, {nameof(NameUser)}: {NameUser}, {nameof(Email)}: {Email}, {nameof(PasswordUser)}: {PasswordUser}, {nameof(RoleUserId)}: {RoleUserId}, {nameof(ProfUserId)}: {ProfUserId}, {nameof(ContactUserId)}: {ContactUserId}";
     }
 }

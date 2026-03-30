@@ -817,14 +817,14 @@ public class MedSaveContext : DbContext
                 .HasColumnType("VARCHAR2(150)")
                 .IsRequired();
 
-            entity.Property(e => e.Login)
-                .HasColumnName("LOGIN")
+            entity.Property(e => e.Email)
+                .HasColumnName("Email")
                 .HasColumnType("VARCHAR(50)")
                 .IsRequired();
             
-            entity.HasIndex(e => e.Login)
+            entity.HasIndex(e => e.Email)
                 .IsUnique()
-                .HasDatabaseName("UK_USERS_SYS_LOGIN");
+                .HasDatabaseName("UK_USERS_SYS_EMAIL");
 
             entity.Property(e => e.PasswordUser)
                 .HasColumnName("PASSWORD_USER")

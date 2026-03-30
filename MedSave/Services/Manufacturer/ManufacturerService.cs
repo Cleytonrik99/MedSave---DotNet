@@ -152,7 +152,7 @@ public class ManufacturerService : IManufacturerService
         }
         catch (ManufacturerRepository.NotFoundException ex)
         {
-            throw new ManufacturerRepository.NotFoundException($"Manufacturer with ID {id} not founded.");
+            throw new NotFoundException($"Manufacturer with ID {id} not founded.");
         }
         catch (Exception ex)
         {
