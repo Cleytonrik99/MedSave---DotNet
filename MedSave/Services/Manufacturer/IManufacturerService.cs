@@ -5,7 +5,7 @@ namespace MedSave.Services.Manufacturer;
 
 public interface IManufacturerService
 {
-    Task<ManufacturerDTO?> GetByIdAsync(long id);
+    Task<CreateManufacturerRequest?> GetByIdAsync(long id);
     Task<IEnumerable<ManufacturerDTO>> GetAllAsync();
     Task<ManufacturerDTO?> AddAsync(ManufacturerDTO manufacturerDto, AddressManufacturerDTO addressManufacturerDto, ContactManufacturerDTO contactManufacturerDto);
     Task UpdateAsync(long id, ManufacturerDTO manufacturerDto);

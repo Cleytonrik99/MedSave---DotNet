@@ -204,5 +204,4 @@ public class ManufacturerController : ControllerBase
             });
         }
     }
-    
 }

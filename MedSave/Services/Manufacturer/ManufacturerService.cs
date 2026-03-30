@@ -32,21 +32,45 @@ public class ManufacturerService : IManufacturerService
         public NotFoundException(string message) : base(message) {}
     }
 
-    public async Task<ManufacturerDTO?> GetByIdAsync(long id)
+    public async Task<CreateManufacturerRequest?> GetByIdAsync(long id)
     {
         var manufac = await _manufacturerRepository.GetByIdAsync(id);
 
         var contact = await _contactManufacturerRepository.GetByIdAsync(manufac.ContactManuId);
 
         var address = await _addressManufacturerRepository.GetByIdAsync(manufac.AddressIdManufacturer);
-
-        return new ManufacturerDTO
+        
+        var manuDTO = new ManufacturerDTO
         {
             ManufacId = manufac.ManufacId,
             AddressIdManufacturer = manufac.AddressIdManufacturer,
             Cnpj = manufac.Cnpj,
             ContactManuId = manufac.ContactManuId,
             NameManu = manufac.NameManu
+        };
+
+        var contactDTO = new ContactManufacturerDTO
+        {
+            ContactManuId = contact.ContactManuId,
+            EmailManu = contact.EmailManu,
+            PhoneNumberManu = contact.PhoneNumberManu
+        };
+
+        var addressDTO = new AddressManufacturerDTO
+        {
+            AddressDescription = address.AddressDescription,
+            AddressIdManufacturer = address.AddressIdManufacturer,
+            Cep = address.Cep,
+            Complement = address.Complement,
+            NeighId = address.NeighId,
+            NumberManu = address.NumberManu
+        };
+
+        return new CreateManufacturerRequest
+        {
+            ManufacturerDto = manuDTO,
+            ContactManufacturerDto = contactDTO,
+            AddressManufacturerDto = addressDTO
         };
     }
 
