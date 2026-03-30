@@ -177,11 +177,15 @@ public class ManufacturerService : IManufacturerService
     {
         try
         {
+            var manu = await _manufacturerRepository.GetByIdAsync(id);
+            
             await _manufacturerRepository.DeleteAsync(id);
+            await _addressManufacturerRepository.DeleteAsync(manu.AddressIdManufacturer);
+            await _contactManufacturerRepository.DeleteAsync(manu.ContactManuId);
         }
         catch (ManufacturerRepository.NotFoundException ex)
         {
-            throw new NotFoundException($"Manufacturer with ID {id} not founded.");
+            throw new NotFoundException($"Manufacturer with ID {id} not found.");
         }
         catch (Exception ex)
         {
