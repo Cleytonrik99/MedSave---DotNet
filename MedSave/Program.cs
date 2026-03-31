@@ -1,7 +1,9 @@
-﻿using MedSave.Context;
+﻿using HealthChecks.UI.Client;
+using MedSave.Context;
 using MedSave.Repositories;
 using MedSave.Services;
 using MedSave.Services.Manufacturer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHealthChecks();
 
 // ==============================
 // DbContext
@@ -47,6 +50,13 @@ builder.Services.AddScoped<IStockService, StockService>();
 
 var app = builder.Build();
 
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.MapGet("/basicCheck", () => "Health Checks API");
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -54,8 +64,21 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
+
+app.MapControllers();
+
+app.Run();
+
+
+
+
+
+
+
+
+
 /*
- 
+
         // ==============================
         // Swagger + XML comments
         // ==============================
@@ -77,9 +100,5 @@ app.UseSwaggerUI(c =>
                 options.IncludeXmlComments(xmlPath);
             }
         });
- 
- */
 
-app.MapControllers();
-
-app.Run();
+*/
