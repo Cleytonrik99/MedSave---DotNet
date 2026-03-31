@@ -4,15 +4,34 @@ using MedSave.Repositories;
 using MedSave.Services;
 using MedSave.Services.Manufacturer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddOracle(
+        connectionString: connectionString, 
+        name: "oracle-database", 
+        failureStatus: HealthStatus.Degraded,
+        tags: new[]{"db", "oracle", "sql"},
+        timeout: TimeSpan.FromSeconds(10)
+    );
+
+builder.Services.AddHealthChecksUI(options =>
+    {
+        options.SetEvaluationTimeInSeconds(15);
+        options.MaximumHistoryEntriesPerEndpoint(50);
+        options.SetApiMaxActiveRequests(1);
+        options.AddHealthCheckEndpoint("Health Check General", "/health");
+        options.AddHealthCheckEndpoint("Health Check Database", "/health/database");
+    })
+    .AddInMemoryStorage();
 
 // ==============================
 // DbContext
@@ -55,7 +74,16 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
-app.MapGet("/basicCheck", () => "Health Checks API");
+app.MapHealthChecks("/health/database", new HealthCheckOptions
+{
+    Predicate = (check) => check.Tags.Contains("db"),
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.MapHealthChecksUI(options =>
+{
+    options.UIPath = "/health-ui";
+});
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
@@ -64,6 +92,7 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
+app.MapGet("/healthCheckSimples", () => "Application live with Health Checks");
 
 app.MapControllers();
 
