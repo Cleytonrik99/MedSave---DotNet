@@ -33,6 +33,7 @@ public class MedSaveContext : DbContext
     public DbSet<Neighbourhood> Neighbourhood { get; set; }
     public DbSet<PharmaceuticalForm> PharmaceuticalForm { get; set; }
     public DbSet<ProfileUser> ProfileUser { get; set; }
+    public DbSet<ProviderType> ProviderType { get; set; }
     public DbSet<RoleUser> RoleUser { get; set; }
     public DbSet<States> States { get; set; }
     public DbSet<Stock> Stock { get; set; }
@@ -632,6 +633,24 @@ public class MedSaveContext : DbContext
             entity.Property(e => e.UserProfile)
                 .HasColumnName("USER_PROFILE")
                 .HasColumnType("VARCHAR2(50)")
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<ProviderType>(entity =>
+        {
+            entity.ToTable("PROVIDER_TYPE");
+
+            entity.HasKey(e => e.ProviderTypeId)
+                .HasName("PK_PROVIDER_TYPE");
+
+            entity.Property(e => e.ProviderTypeId)
+                .HasColumnName("PROVIDER_TYPE_ID")
+                .HasColumnType("NUMBER")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.ProviderName)
+                .HasColumnName("PROVIDER_NAME")
+                .HasColumnType("VARCHAR2(100)")
                 .IsRequired();
         });
         
