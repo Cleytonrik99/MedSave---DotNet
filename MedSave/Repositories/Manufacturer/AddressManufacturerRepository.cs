@@ -12,25 +12,10 @@ public class AddressManufacturerRepository : IAddressManufacturerRepository
     {
         _context = context;
     }
-    
-    public class NotFoundException : Exception
-    {
-        public NotFoundException (string message) : base(message) {}
-    }
-    
-    public class DuplicateRecordException : Exception
-    {
-        public DuplicateRecordException (string message) : base(message) {}
-    }
 
     public async Task<AddressManufacturer?> GetByIdAsync(long id)
     {
         var search = await _context.AddressManufacturer.FindAsync(id);
-
-        if (search == null)
-        {
-            throw new NotFoundException($"Address Manufacturer with Id {id} not found");
-        }
 
         return search;
     }
@@ -38,11 +23,6 @@ public class AddressManufacturerRepository : IAddressManufacturerRepository
     public async Task<IEnumerable<AddressManufacturer>> GetAllAsync()
     {
         var search = await _context.AddressManufacturer.ToListAsync();
-
-        if (search.Count == 0)
-        {
-            throw new NotFoundException("Not Address Manufacturer found");
-        }
 
         return search;
     }
@@ -62,10 +42,9 @@ public class AddressManufacturerRepository : IAddressManufacturerRepository
     public async Task DeleteAsync(long id)
     {
         var search = await _context.AddressManufacturer.FindAsync(id);
-        if (search != null)
-        {
-            _context.AddressManufacturer.Remove(search);
-            await _context.SaveChangesAsync();
-        }
+        
+        _context.AddressManufacturer.Remove(search);
+        await _context.SaveChangesAsync();
+        
     }
 }
