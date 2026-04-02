@@ -1,6 +1,7 @@
 ﻿using MedSave.Context;
 using MedSave.Model;
 using MedSave.Repositories.Healthcare_Providers.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace MedSave.Repositories.Healthcare_Providers;
 
@@ -10,26 +11,35 @@ public class ProviderTypeRepository : IProviderTypeRepository
 
     public async Task<ProviderType?> GetByIdAsync(long id)
     {
-        var search = await _context.
+        var search = await _context.ProviderType.FindAsync(id);
+
+        return search;
     }
 
-    public Task<IEnumerable<ProviderType>> GetAllAsync()
+    public async Task<IEnumerable<ProviderType>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var search = await _context.ProviderType.ToListAsync();
+
+        return search;
     }
 
-    public Task AddAsync(ProviderType providerType)
+    public async Task AddAsync(ProviderType providerType)
     {
-        throw new NotImplementedException();
+        _context.ProviderType.AddAsync(providerType);
+        await _context.SaveChangesAsync();
     }
 
-    public Task UpdateAsync(ProviderType providerType)
+    public async Task UpdateAsync(ProviderType providerType)
     {
-        throw new NotImplementedException();
+        _context.ProviderType.Update(providerType);
+        await _context.SaveChangesAsync();
     }
 
-    public Task DeleteAsync(long id)
+    public async Task DeleteAsync(long id)
     {
-        throw new NotImplementedException();
+        var search = await _context.ProviderType.FindAsync(id);
+
+        _context.ProviderType.Remove(search);
+        await _context.SaveChangesAsync();
     }
 }
