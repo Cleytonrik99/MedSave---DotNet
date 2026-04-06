@@ -5,9 +5,12 @@ using MedSave.Services;
 using MedSave.Services.Manufacturer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddControllers();
 
@@ -93,6 +96,8 @@ app.UseSwaggerUI(c =>
 });
 
 app.MapGet("/healthCheckSimples", () => "Application live with Health Checks");
+
+app.UseSerilogRequestLogging();
 
 app.MapControllers();
 

@@ -9,6 +9,7 @@ Release/
 *.sln.iml
 
 # Logs
+Logs/
 *.log
 
 # Testes
