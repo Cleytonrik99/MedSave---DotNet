@@ -1,4 +1,5 @@
-﻿using MedSave.DTOs;
+﻿using IdentityModel.Client;
+using MedSave.DTOs;
 using MedSave.DTOs.Hypermedia;
 using MedSave.DTOs.Manufacturer;
 using MedSave.Repositories;
@@ -19,6 +20,9 @@ public class ManufacturerController : ControllerBase
     }
     
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
         try
@@ -52,6 +56,9 @@ public class ManufacturerController : ControllerBase
     }
 
     [HttpGet("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetById(long id)
     {
         try
@@ -77,6 +84,10 @@ public class ManufacturerController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AddManufacturer([FromBody] CreateManufacturerRequest req)
     {
         try
@@ -117,6 +128,10 @@ public class ManufacturerController : ControllerBase
     }
 
     [HttpPut("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateManufacturer(long id, [FromBody] ManufacturerDTO dto)
     {
         try
@@ -148,6 +163,9 @@ public class ManufacturerController : ControllerBase
     }
 
     [HttpDelete("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteManufacturer(long id)
     {
         try
@@ -173,6 +191,9 @@ public class ManufacturerController : ControllerBase
     }
 
     [HttpGet("search")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Search(
         [FromQuery] int? cnpj,
         [FromQuery] long? contactManuId,

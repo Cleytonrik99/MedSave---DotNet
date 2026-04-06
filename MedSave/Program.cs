@@ -1,10 +1,12 @@
-﻿using HealthChecks.UI.Client;
+﻿using System.Reflection;
+using HealthChecks.UI.Client;
 using MedSave.Context;
 using MedSave.Repositories;
 using MedSave.Services;
 using MedSave.Services.Manufacturer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +17,21 @@ builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(conte
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "MedSave API",
+        Version = "v1",
+        Description = "API RESTful da solução MedSave para gerenciamento de medicamentos em instuições de saúde."
+    });
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        options.IncludeXmlComments(xmlPath);
+    }
+});
 
 builder.Services.AddHealthChecks()
     .AddOracle(
