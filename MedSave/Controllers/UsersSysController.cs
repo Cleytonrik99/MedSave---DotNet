@@ -1,10 +1,8 @@
-﻿using MedSave.Services;
-using MedSave.DTOs;
+﻿/*
+using MedSave.Services;
 using MedSave.DTOs.Hypermedia;
 using MedSave.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using System.Linq;
 using MedSave.DTOs.User;
 
 namespace MedSave.Controllers;
@@ -250,3 +248,4 @@ public class CreateUserRequest
     public UsersSysDTO UsersSysDto { get; set; } = default!;
     public ContactUserDTO ContactUserDto { get; set; } = default!;
 }
+*/
