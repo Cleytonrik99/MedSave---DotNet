@@ -7,12 +7,18 @@ using MedSave.Services.Manufacturer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddOpenTelemetry().UseAzureMonitor(options =>
+{
+    options.ConnectionString = builder.Configuration["AzureMonitor:ConnectionString"]; 
+});
 
 builder.Services.AddControllers();
 

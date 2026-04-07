@@ -1,6 +1,4 @@
-﻿using IdentityModel.Client;
-using MedSave.DTOs;
-using MedSave.DTOs.Hypermedia;
+﻿using MedSave.DTOs;
 using MedSave.DTOs.Manufacturer;
 using MedSave.Repositories;
 using MedSave.Services.Manufacturer;
