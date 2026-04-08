@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -67,7 +68,8 @@ builder.Services.AddHealthChecksUI(options =>
 // ==============================
 // DbContext
 // ==============================
-builder.Services.AddDbContext<MedSaveContext>();
+builder.Services.AddDbContext<MedSaveContext>(options =>
+    options.UseOracle(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 // ==============================

@@ -12,7 +12,6 @@ public class MedSaveContext : DbContext
 
     public MedSaveContext(DbContextOptions<MedSaveContext> options, IConfiguration configuration) : base(options)
     {
-        _configuration = configuration;
     }
     
     public DbSet<ActiveIngredient> ActiveIngredient { get; set; }
@@ -40,13 +39,6 @@ public class MedSaveContext : DbContext
     public DbSet<StockMovement> StockMovement { get; set; }
     public DbSet<UnitMeasure> UnitMeasure { get; set; }
     public DbSet<UsersSys> UsersSys { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var connectionString = _configuration.GetConnectionString("DefaultConnection");
-        
-        optionsBuilder.UseOracle(connectionString);
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
