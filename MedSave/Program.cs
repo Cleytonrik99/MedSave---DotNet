@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Timers;
 using HealthChecks.UI.Client;
 using MedSave.Context;
 using MedSave.Repositories;
@@ -45,6 +46,11 @@ builder.Services.AddHealthChecks()
         failureStatus: HealthStatus.Degraded,
         tags: new[]{"db", "oracle", "sql"},
         timeout: TimeSpan.FromSeconds(10)
+    )
+    .AddCheck(
+        "self",
+        () => HealthCheckResult.Healthy("Application is running"),
+        tags: new[] { "api", "self" }
     );
 
 builder.Services.AddHealthChecksUI(options =>
@@ -53,6 +59,7 @@ builder.Services.AddHealthChecksUI(options =>
         options.MaximumHistoryEntriesPerEndpoint(50);
         options.SetApiMaxActiveRequests(1);
         options.AddHealthCheckEndpoint("Health Check General", "/health");
+        options.AddHealthCheckEndpoint("Health Check Application", "/health/application");
         options.AddHealthCheckEndpoint("Health Check Database", "/health/database");
     })
     .AddInMemoryStorage();
@@ -95,6 +102,13 @@ var app = builder.Build();
 
 app.MapHealthChecks("/health", new HealthCheckOptions
 {
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.MapHealthChecks("/health/application", new HealthCheckOptions
+{
+    Predicate = (check) => check.Tags.Contains("self"),
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
@@ -116,9 +130,19 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
-app.MapGet("/healthCheckSimples", () => "Application live with Health Checks");
+app.UseSerilogRequestLogging(options =>
+{
+    options.GetLevel = (httpContext, elapsed, ex) =>
+    {
+        if (ex != null || httpContext.Response.StatusCode >= 500)
+            return Serilog.Events.LogEventLevel.Error;
 
-app.UseSerilogRequestLogging();
+        if (httpContext.Response.StatusCode >= 400)
+            return Serilog.Events.LogEventLevel.Warning;
+
+        return Serilog.Events.LogEventLevel.Information;
+    };
+});
 
 app.MapControllers();
 
