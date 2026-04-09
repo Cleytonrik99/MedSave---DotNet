@@ -192,33 +192,7 @@ public class ManufacturerControllerIntegrationTests
         var body = await response.Content.ReadAsStringAsync();
         Assert.Contains("Novo Fornecedor", body);
     }
-/*
-    [Fact]
-    public async Task AddManufacturer_ShouldReturn409_WhenConflictOccurs()
-    {
-        // Arrange
-        var request = new CreateManufacturerRequest
-        {
-            ManufacturerDto = new ManufacturerDTO(),
-            ContactManufacturerDto = new ContactManufacturerDTO(),
-            AddressManufacturerDto = new AddressManufacturerDTO()
-        };
 
-        _factory.ManufacturerServiceMock.Reset();
-        _factory.ManufacturerServiceMock
-            .Setup(s => s.AddAsync(
-                It.IsAny<ManufacturerDTO>(),
-                It.IsAny<AddressManufacturerDTO>(),
-                It.IsAny<ContactManufacturerDTO>()))
-            .ThrowsAsync(new ManufacturerService.ConflictException("CNPJ already registered"));
-
-        // Act
-        var response = await _client.PostAsJsonAsync("/api/Manufacturer", request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
-    }
-*/
     [Fact]
     public async Task UpdateManufacturer_ShouldReturn200_WhenUpdateSucceeds()
     {
