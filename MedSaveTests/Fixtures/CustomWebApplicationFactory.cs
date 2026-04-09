@@ -1,0 +1,24 @@
+﻿using MedSave.Services.Manufacturer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Moq;
+
+namespace MedSaveTests.Fixtures;
+
+public class CustomWebApplicationFactory : WebApplicationFactory<Program>
+{
+    public Mock<IManufacturerService> ManufacturerServiceMock { get; } = new();
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.UseEnvironment("Testing");
+
+        builder.ConfigureServices(services =>
+        {
+            services.RemoveAll(typeof(IManufacturerService));
+            services.AddScoped(_ => ManufacturerServiceMock.Object);
+        });
+    }
+}
