@@ -9,7 +9,11 @@
 O **MedSave** é um sistema essencial proposto para modernizar e garantir a **segurança** na gestão de todo o fluxo de medicamentos da instituição. A proposta é transformar o **controle de estoque**, que hoje é propenso a falhas manuais, em um processo **digital, rastreável e confiável**.
 
 O projeto atuará como o **coração da logística farmacêutica**, controlando o ciclo completo: desde a entrada de um produto no estoque até sua dispensação final ao paciente. O sistema garantirá que a gestão saiba exatamente **onde, quanto e até quando** cada medicamento pode ser utilizado, graças ao **registro detalhado por lote e data de validade**, evitando desperdícios e falhas no controle de validade, além de otimizar a alocação e redistribuição dos medicamentos entre diferentes unidades de saúde.
+
+Além das funcionalidades de negócio, a solução também conta com recursos de **monitoramento e observabilidade**, como **Health Checks**, **logging estruturado com Serilog** e **telemetria com OpenTelemetry integrada ao Azure Monitor**, bem como **testes automatizados** para validação da aplicação.
+
 ---
+
 ## 🏗️ Arquitetura e Tecnologia
 
 A MedSave adota uma arquitetura moderna e escalável, utilizando o melhor de cada tecnologia:
@@ -21,20 +25,21 @@ A MedSave adota uma arquitetura moderna e escalável, utilizando o melhor de cad
 * **Cloud:** **Oracle Cloud Infrastructure**
 
 A API em **.NET 9** segue uma arquitetura em **camadas**, com separação clara entre:
-- **Domain Model (Entities)** → classes de domínio do banco Oracle.  
-- **Repositories** → acesso a dados via Entity Framework Core.  
-- **Services** → lógica de negócio, validações e tratamento de exceções.  
-- **Controllers** → endpoints RESTful com suporte a **HATEOAS** (nível 3).  
-- **DTOs (Data Transfer Objects)** → isolamento das entidades para transporte seguro de dados.  
+- **Domain Model (Entities)** → classes de domínio do banco Oracle.
+- **Repositories** → acesso a dados via Entity Framework Core.
+- **Services** → lógica de negócio, validações e tratamento de exceções.
+- **Controllers** → endpoints RESTful responsáveis por expor a API, receber requisições e retornar respostas HTTP adequadas.
+- **DTOs (Data Transfer Objects)** → isolamento das entidades para transporte seguro de dados.
+
 ---
 
 ## 🤝 Integrantes do Projeto
 
-| Nome                                  | Função no Projeto          | LinkedIn | GitHub |
-|---------------------------------------|----------------------------|----------|--------|
-| Cleyton Enrike de Oliveira            | Desenvolvedor .NET & IOT   | [LinkedIn](https://www.linkedin.com/in/cleyton-enrike-de-oliveira99) | [@Cleytonrik99](https://github.com/Cleytonrik99) |
-| Matheus Henrique Nascimento de Freitas| Desenvolvedor Mobile & DBA | [LinkedIn](https://www.linkedin.com/in/matheus-henrique-freitas)     | [@MatheusHenriqueNF](https://github.com/MatheusHenriqueNF) |
-| Pedro Henrique Sena                   | Desenvolvedor Java & DevOps| [LinkedIn](https://www.linkedin.com/in/pedro-henrique-sena)          | [@devpedrosena1](https://github.com/devpedrosena1) |
+| Nome | Função no Projeto | LinkedIn | GitHub |
+|---|---|---|---|
+| Cleyton Enrike de Oliveira | Desenvolvedor .NET & IOT | [LinkedIn](https://www.linkedin.com/in/cleyton-enrike-de-oliveira99) | [@Cleytonrik99](https://github.com/Cleytonrik99) |
+| Matheus Henrique Nascimento de Freitas | Desenvolvedor Mobile & DBA | [LinkedIn](https://www.linkedin.com/in/matheus-henrique-freitas) | [@MatheusHenriqueNF](https://github.com/MatheusHenriqueNF) |
+| Pedro Henrique Sena | Desenvolvedor Java & DevOps | [LinkedIn](https://www.linkedin.com/in/pedro-henrique-sena) | [@devpedrosena1](https://github.com/devpedrosena1) |
 
 ---
 
@@ -45,25 +50,34 @@ O **MedSave** será desenvolvido como uma solução **full-stack**, utilizando *
 ### Funcionalidades Principais
 
 1. **Gestão de Usuários**:
-   - Cadastro de operadores (com verificação de dados únicos, como e-mail e telefone).
-   - Login de operadores.
-   - Edição do cadastro, incluindo alteração de informações e senha.
-   - Deleção de contas de usuários.
+    - Cadastro de operadores (com verificação de dados únicos, como e-mail e telefone).
+    - Login de operadores.
+    - Edição do cadastro, incluindo alteração de informações e senha.
+    - Deleção de contas de usuários.
 
 2. **Gestão de Estoque de Medicamentos**:
-   - Cadastro de medicamentos, com informações como nome, quantidade, validade, etc.
-   - Atualização da quantidade de medicamentos no estoque.
-   - Rastreabilidade dos medicamentos por lote e data de validade.
-   - Alertas para medicamentos próximos da validade.
+    - Cadastro de medicamentos, com informações como nome, quantidade, validade, etc.
+    - Atualização da quantidade de medicamentos no estoque.
+    - Rastreabilidade dos medicamentos por lote e data de validade.
+    - Alertas para medicamentos próximos da validade.
 
 3. **Movimentação de Medicamentos**:
-   - Registros de entradas e saídas de medicamentos no estoque.
-   - Transferências entre unidades de saúde.
-   - Dispensação de medicamentos para pacientes.
+    - Registros de entradas e saídas de medicamentos no estoque.
+    - Transferências entre unidades de saúde.
+    - Dispensação de medicamentos para pacientes.
 
 4. **Inteligência Artificial (IA)**:
-   - Previsão de demanda de medicamentos com base em dados históricos de consumo.
-   - Análise de validade e otimização do estoque para evitar desperdícios.
+    - Previsão de demanda de medicamentos com base em dados históricos de consumo.
+    - Análise de validade e otimização do estoque para evitar desperdícios.
+
+5. **Monitoramento e Observabilidade**:
+    - Endpoints de Health Check para verificação da saúde da aplicação.
+    - Logging estruturado com níveis de severidade.
+    - Telemetria e monitoramento com OpenTelemetry e Azure Monitor.
+
+6. **Testes Automatizados**:
+    - Testes unitários e de integração para validação das regras de negócio e endpoints da API.
+    - Execução automatizada com `dotnet test`.
 
 O **MedSave** não incluirá funcionalidades de **gestão financeira**, **gestão de pacientes** ou **gestão de fornecedores** nesta fase inicial. Focaremos principalmente na gestão de medicamentos e na experiência do operador.
 
@@ -78,6 +92,8 @@ O **MedSave** não incluirá funcionalidades de **gestão financeira**, **gestã
 3. **Gestão de Estoque**
 4. **Movimentação de Medicamentos**
 5. **Análise de Dados**
+6. **Monitoramento da Aplicação**
+7. **Execução de Testes Automatizados**
 
 ### Requisitos Não Funcionais
 
@@ -85,148 +101,179 @@ O **MedSave** não incluirá funcionalidades de **gestão financeira**, **gestã
 - **Segurança e Manutenibilidade**
 - **Compatibilidade entre Plataformas**
 - **Usabilidade e Responsividade**
+- **Observabilidade**
+- **Confiabilidade**
 
 ---
 
-# 📡 API MedSave — Endpoints e Exemplos  
+# 📡 API MedSave — Endpoints e Exemplos
+
 > Por padrão, a API roda em **http://localhost:5000**
 
 ---
 
-## 👤 Users — `/api/UsersSys`
+## 🏭 Manufacturer — `/api/Manufacturer`
 
 | Método | Endpoint | Descrição | Corpo da Requisição (JSON) | Resposta Esperada |
-|--------|-----------|------------|-----------------------------|-------------------|
-| **GET** | `/api/UsersSys` | Retorna todos os usuários cadastrados (com HATEOAS). | — | 200 OK com coleção e links de navegação. |
-| **GET** | `/api/UsersSys/{id}` | Retorna um usuário específico pelo ID. | — | 200 OK com `_links` de ações possíveis ou 404 Not Found. |
-| **POST** | `/api/UsersSys` | Cria um novo usuário e contato associado. | ```{ "usersSysDto": { "nameUser": "Maria Oliveira", "login": "maria.oli", "passwordUser": "senhaSegura123", "roleUserId": 2, "profUserId": 3 }, "contactUserDto": { "emailUser": "maria.oliveira@hospital.com", "phoneNumberUser": "11999887766" } } ``` | 201 Created (objeto criado + links) |
-| **DELETE** | `/api/UsersSys/{id}` | Deleta um usuário existente. | — | 200 OK (mensagem + links) |
-| **GET** | `/api/UsersSys/search` | Busca usuários com paginação e filtros. | — | 200 OK com `PagedResult` + `_links` de paginação. |
+|---|---|---|---|---|
+| **GET** | `/api/Manufacturer` | Retorna todos os fabricantes cadastrados. | — | 200 OK com coleção de fabricantes. |
+| **GET** | `/api/Manufacturer/{id}` | Retorna um fabricante específico pelo ID. | — | 200 OK com os dados do fabricante ou 404 Not Found. |
+| **POST** | `/api/Manufacturer` | Cria um novo fabricante. | Exemplo abaixo. | 201 Created com o objeto criado. |
+| **PUT** | `/api/Manufacturer/{id}` | Atualiza um fabricante existente. | Exemplo abaixo. | 204 No Content ou 404 Not Found. |
+| **DELETE** | `/api/Manufacturer/{id}` | Deleta um fabricante existente. | — | 200 OK com mensagem de confirmação ou 404 Not Found. |
+| **GET** | `/api/Manufacturer/search` | Busca fabricantes com paginação e filtros. | — | 200 OK com `PagedResult`. |
 
----
+### Exemplo de corpo para **POST** `/api/Manufacturer`
 
-## 📦 Stock — `/api/Stock`
+```json
+{
+  "nameManufacturer": "Eurofarma",
+  "cnpj": 12345678000199,
+  "contactManuId": 1,
+  "addressIdManufacturer": 1
+}
+```
 
-| Método  | Endpoint          | Descrição                                        | Corpo da Requisição (JSON)                                                                     | Resposta Esperada                 |
-| ------- | ----------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------- | --------------------------------- |
-| **GET** | `/api/Stock`      | Retorna todos os registros de estoque (HATEOAS). | —                                                                                              | 200 OK com lista de `StockDTO`.   |
-| **GET** | `/api/Stock/{id}` | Retorna um estoque específico pelo ID.           | —                                                                                              | 200 OK (objeto) ou 404 Not Found. |
-| **PUT** | `/api/Stock/{id}` | Atualiza as informações de um estoque existente. | ```{ "stockId": 1, "medicineId": 3, "locationIdStock": 2, "batchId": 4, "quantity": 250 } ``` | 204 No Content ou 404 Not Found.  |
-| **GET** | `/api/Stock/search` | Busca estoques filtrando por medicamento, lote ou local. | — | 200 OK (resultado paginado + links). |
+### Exemplo de corpo para **PUT** `/api/Manufacturer/{id}`
 
-OBS: No PUT, o operador atualiza apenas a **quantidade** — IDs não devem ser alterados no corpo.
-
----
-
+```json
+{
+  "nameManufacturer": "Eurofarma Atualizada",
+  "cnpj": 12345678000199,
+  "contactManuId": 1,
+  "addressIdManufacturer": 1
+}
+```
 
 ---
 
 ## 🔍 Exemplos de Requisições **Search** (Filtros, Paginação e Ordenação)
 
-### 👤 Users — `/api/UsersSys/search`
+### 🏭 Manufacturer — `/api/Manufacturer/search`
 
 **Parâmetros suportados**
-- `name` *(string, opcional)* — filtra por parte do nome
-- `login` *(string, opcional)* — filtra por parte do login
-- `roleUserId` *(long, opcional)* — filtra por perfil
-- `profUserId` *(long, opcional)* — filtra por profissão
+- `cnpj` *(int, opcional)* — filtra por CNPJ
+- `contactManuId` *(long, opcional)* — filtra por ID do contato
+- `addressIdManufacturer` *(long, opcional)* — filtra por ID do endereço
 - `page` *(int, padrão: 1)* — página atual
 - `pageSize` *(int, padrão: 10)* — itens por página (máx. 100)
-- `sortBy` *(string, padrão: userId)* — campo de ordenação (ex.: `userId`, `nameUser`, `login`)
+- `sortBy` *(string, padrão: manufacId)* — campo de ordenação (ex.: `manufacId`, `nameManufacturer`, `cnpj`)
 - `sortDir` *(string, padrão: asc)* — `asc` ou `desc`
 
 **Exemplos**
 
 - **Básico (padrão):**
   ```http
-  GET http://localhost:5000/api/UsersSys/search?page=1&pageSize=10&sortBy=userId&sortDir=asc
+  GET http://localhost:5000/api/Manufacturer/search?page=1&pageSize=10&sortBy=manufacId&sortDir=asc
   ```
 
-- **Filtrar por nome e perfil:**
+- **Filtrar por CNPJ:**
   ```http
-  GET http://localhost:5000/api/UsersSys/search?name=Maria&roleUserId=2&page=1&pageSize=5&sortBy=nameUser&sortDir=asc
+  GET http://localhost:5000/api/Manufacturer/search?cnpj=12345678000199&page=1&pageSize=10&sortBy=manufacId&sortDir=asc
   ```
 
-- **Login contém “oli”, ordenando por nome desc, página 2:**
+- **Filtrar por contato e ordenar por nome desc:**
   ```http
-  GET http://localhost:5000/api/UsersSys/search?login=oli&page=2&pageSize=5&sortBy=nameUser&sortDir=desc
+  GET http://localhost:5000/api/Manufacturer/search?contactManuId=2&page=1&pageSize=5&sortBy=nameManufacturer&sortDir=desc
+  ```
+
+- **Filtrar por endereço:**
+  ```http
+  GET http://localhost:5000/api/Manufacturer/search?addressIdManufacturer=1&page=1&pageSize=10&sortBy=manufacId&sortDir=asc
   ```
 
 - **cURL (exemplo equivalente):**
   ```bash
-  curl -X GET "http://localhost:5000/api/UsersSys/search?name=Maria&roleUserId=2&page=1&pageSize=5&sortBy=nameUser&sortDir=asc"
+  curl -X GET "http://localhost:5000/api/Manufacturer/search?cnpj=12345678000199&page=1&pageSize=10&sortBy=manufacId&sortDir=asc"
   ```
 
----
+> **Resposta (modelo)**:
 
-### 📦 Stock — `/api/Stock/search`
-
-**Parâmetros suportados**
-- `medicineId` *(long, opcional)* — filtra por medicamento
-- `locationIdStock` *(long, opcional)* — filtra por local/almoxarifado
-- `batchId` *(long, opcional)* — filtra por lote
-- `page` *(int, padrão: 1)* — página atual
-- `pageSize` *(int, padrão: 10)* — itens por página (máx. 100)
-- `sortBy` *(string, padrão: stockId)* — campo de ordenação (ex.: `stockId`, `medicineId`, `quantity`)
-- `sortDir` *(string, padrão: asc)* — `asc` ou `desc`
-
-**Exemplos**
-
-- **Básico (padrão):**
-  ```http
-  GET http://localhost:5000/api/Stock/search?page=1&pageSize=10&sortBy=stockId&sortDir=asc
-  ```
-
-- **Filtrar por medicamento e local:**
-  ```http
-  GET http://localhost:5000/api/Stock/search?medicineId=3&locationIdStock=2&page=1&pageSize=10&sortBy=quantity&sortDir=desc
-  ```
-
-- **Filtrar por lote específico (com ordenação asc):**
-  ```http
-  GET http://localhost:5000/api/Stock/search?batchId=15&sortBy=medicineId&sortDir=asc
-  ```
-
-- **cURL (exemplo equivalente):**
-  ```bash
-  curl -X GET "http://localhost:5000/api/Stock/search?medicineId=3&locationIdStock=2&page=1&pageSize=10&sortBy=quantity&sortDir=desc"
-  ```
-
-> **Resposta (modelo)**: os endpoints de busca retornam um `PagedResult` com `_links` de paginação (HATEOAS), por exemplo:
 ```json
 {
   "items": [
-    { "userId": 10, "nameUser": "Maria Oliveira", "login": "maria.oli", "roleUserId": 2, "profUserId": 3, "contactUserId": 7, "_links": [ /* ... */ ] }
+    {
+      "manufacId": 1,
+      "nameManufacturer": "Eurofarma",
+      "cnpj": 12345678000199,
+      "contactManuId": 2,
+      "addressIdManufacturer": 1
+    }
   ],
-  "pageInfo": { "page": 1, "pageSize": 5, "totalItems": 12, "totalPages": 3 },
-  "_links": [
-    { "rel": "self", "href": "/api/UsersSys/search?name=Maria&page=1&pageSize=5", "method": "GET" },
-    { "rel": "next", "href": "/api/UsersSys/search?name=Maria&page=2&pageSize=5", "method": "GET" }
-  ]
+  "pageInfo": {
+    "page": 1,
+    "pageSize": 10,
+    "totalItems": 1,
+    "totalPages": 1
+  }
 }
 ```
 
 ---
-### 🧩 HATEOAS e Paginação
 
-A API segue o **nível 3 de maturidade RESTful (HATEOAS)**, retornando `_links` com ações relacionadas:
+### 📄 Paginação
+
+Os endpoints de busca da API retornam resultados paginados para facilitar a navegação e melhorar a performance em consultas com muitos registros.
+
+Exemplo de estrutura de resposta paginada:
+
 ```json
 {
-  "data": {
-    "userId": 10,
-    "nameUser": "Maria Oliveira"
-  },
-  "_links": [
-    { "rel": "self", "href": "/api/UsersSys/10", "method": "GET" },
-    { "rel": "delete", "href": "/api/UsersSys/10", "method": "DELETE" },
-    { "rel": "list", "href": "/api/UsersSys", "method": "GET" }
-  ]
+  "items": [
+    {
+      "manufacId": 1,
+      "nameManufacturer": "Eurofarma",
+      "cnpj": 12345678000199,
+      "contactManuId": 2,
+      "addressIdManufacturer": 1
+    }
+  ],
+  "pageInfo": {
+    "page": 1,
+    "pageSize": 10,
+    "totalItems": 1,
+    "totalPages": 1
+  }
 }
 ```
+
+---
+
+## ❤️ Monitoramento e Observabilidade
+
+A solução .NET do MedSave possui recursos de monitoramento e observabilidade para acompanhamento da saúde da aplicação, conectividade com banco de dados e rastreamento de requisições.
+
+### Health Checks disponíveis
+
+| Endpoint | Descrição |
+|---|---|
+| **GET** `/health` | Retorna o status geral da aplicação, incluindo verificações registradas. |
+| **GET** `/health/application` | Retorna o status interno da aplicação, validando se a API está em execução. |
+| **GET** `/health/database` | Retorna o status da conectividade com o banco de dados Oracle. |
+| **GET** `/health-ui` | Interface visual para monitoramento dos Health Checks configurados. |
+
+### Como monitorar a aplicação
+
+- **Health Check geral:** acesse `http://localhost:5000/health`
+- **Health Check da aplicação:** acesse `http://localhost:5000/health/application`
+- **Health Check do banco:** acesse `http://localhost:5000/health/database`
+- **Painel visual dos Health Checks:** acesse `http://localhost:5000/health-ui`
+
+### Logging estruturado
+
+A aplicação utiliza **Serilog** para logging estruturado, registrando eventos relevantes com níveis de severidade apropriados:
+- **Information** para requisições bem-sucedidas
+- **Warning** para respostas da faixa 4xx
+- **Error** para exceções e respostas da faixa 5xx
+
+### Telemetria e rastreamento
+
+A aplicação utiliza **OpenTelemetry** com integração ao **Azure Monitor**, permitindo rastrear requisições e apoiar a observabilidade do ambiente.
 
 ---
 
 ### 🗃️ Diagrama de Entidade-Relacionamento (DER)
+
 <div align="center">
   <img src="images/der.jpg" alt="Diagrama DER" style="max-width: 90%; border: 1px solid #ddd; border-radius: 4px;">
 </div>
@@ -234,6 +281,7 @@ A API segue o **nível 3 de maturidade RESTful (HATEOAS)**, retornando `_links` 
 ---
 
 ### 🏗️ Desenho da Arquitetura
+
 <div align="center">
   <img src="images/diagrama2.png" alt="Desenho da Arquitetura" style="max-width: 90%; border: 1px solid #ddd; border-radius: 4px;">
 </div>
@@ -270,14 +318,14 @@ A API segue o **nível 3 de maturidade RESTful (HATEOAS)**, retornando `_links` 
    ```
 
 4. **Configure a conexão com o banco**
-   - No `appsettings.json`, defina:
-     ```json
-     {
-       "ConnectionStrings": {
-         "DefaultConnection": "User Id=USUARIO;Password=SENHA;Data Source=HOST:PORTA/SERVICO"
-       }
-     }
-     ```
+    - No `appsettings.json`, defina:
+      ```json
+      {
+        "ConnectionStrings": {
+          "DefaultConnection": "User Id=USUARIO;Password=SENHA;Data Source=HOST:PORTA/SERVICO"
+        }
+      }
+      ```
 
 5. **Atualize o banco de dados (opcional)**
    ```bash
@@ -299,5 +347,43 @@ A API segue o **nível 3 de maturidade RESTful (HATEOAS)**, retornando `_links` 
    http://localhost:5000/swagger
    ```
    Lá você poderá **testar todos os endpoints da API**, incluindo `GET`, `POST`, `PUT`, `DELETE` e `SEARCH`.
+
+8. **Acesse os endpoints de monitoramento**
+   ```
+   http://localhost:5000/health
+   http://localhost:5000/health/application
+   http://localhost:5000/health/database
+   http://localhost:5000/health-ui
+   ```
+
+---
+
+## 🧪 Como Executar os Testes
+
+A solução conta com **testes automatizados** para validar regras de negócio e comportamento dos endpoints da API.
+
+### Executar todos os testes
+
+```bash
+dotnet test
+```
+
+### Fluxo recomendado
+
+```bash
+dotnet restore
+dotnet build
+dotnet test
+```
+
+### Estrutura dos testes
+
+Os testes seguem o padrão **AAA (Arrange, Act, Assert)** e contemplam:
+- **Testes unitários** com **xUnit**
+- Uso de **Moq** para mocks e isolamento de dependências
+- **Testes de integração** com **WebApplicationFactory**
+- Uso de **Fixtures** e **Collection Fixtures**
+- Nomenclatura padronizada no formato:
+    - `MetodoTestado_Cenario_ResultadoEsperado`
 
 ---
