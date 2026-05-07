@@ -13,15 +13,15 @@ public class AddressStockRepository : IAddressStockRepository
     {
         public NotFoundException (string message) : base(message) {}
     }
-    
-    public class DuplicateRecordException : Exception
-    {
-        public DuplicateRecordException (string message) : base(message) {}
-    }
 
     public async Task<AddressStock?> GetByIdAsync(long id)
     {
         var search = await _context.AddressStock.FindAsync(id);
+        
+        if (search == null)
+        {
+            throw new NotFoundException($"Address Stock with Id {id} not found.");
+        }
 
         return search;
     }

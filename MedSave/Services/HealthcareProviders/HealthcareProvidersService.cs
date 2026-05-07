@@ -111,7 +111,6 @@ public class HealthcareProvidersService : IHealthcareProvidersService
         var address = new AddressStock
         {
             AddressDescription = addressStockDto.AddressDescription,
-            AddressIdStock = addressStockDto.AddressIdStock,
             Cep = addressStockDto.Cep,
             Complement = addressStockDto.Complement,
             NeighId = addressStockDto.NeighId,
@@ -120,18 +119,10 @@ public class HealthcareProvidersService : IHealthcareProvidersService
 
         await _addressStockRepository.AddAsync(address);
 
-        var providerType = new ProviderType
-        {
-            ProviderName = providerTypeDto.ProviderName,
-            ProviderTypeId = providerTypeDto.ProviderTypeId
-        };
-
-        await _providerTypeRepository.AddAsync(providerType);
-
         var healthcareProvider = new Model.HealthcareProviders
         {
             AddressIdStock = address.AddressIdStock,
-            ProviderTypeId = providerType.ProviderTypeId,
+            ProviderTypeId = healthcareProvidersDto.ProviderTypeId,
             HealthcareProviderName = healthcareProvidersDto.HealthcareProviderName,
             ProviderName = healthcareProvidersDto.ProviderName,
         };
@@ -150,7 +141,15 @@ public class HealthcareProvidersService : IHealthcareProvidersService
 
     public async Task UpdateAsync(long id, HealthcareProvidersDTO healthcareProvidersDto)
     {
-        if (healthcareProvidersDto == null) throw new ArgumentNullException(nameof(healthcareProvidersDto));
+        if (healthcareProvidersDto == null) throw new ArgumentNullException(nameof(healthcareProvidersDto), "healthcareProvidersDto can't be null");
+
+        if (healthcareProvidersDto.ProviderName == null) throw new ArgumentNullException(nameof(healthcareProvidersDto), "ProviderName can't be null");
+        
+        if (healthcareProvidersDto.HealthcareProviderName == null) throw new ArgumentNullException(nameof(healthcareProvidersDto), "HealthcareProviderName can't be null");
+        
+        if (healthcareProvidersDto.ProviderTypeId == 0) throw new ArgumentNullException(nameof(healthcareProvidersDto), "ProviderTypeId can't be null");
+        
+        if (healthcareProvidersDto.AddressIdStock == 0) throw new ArgumentNullException(nameof(healthcareProvidersDto), "AddressIdStock can't be null");
 
         var existingHCProvider = await _healthcareProvidersRepository.GetByIdAsync(id);
 
@@ -158,16 +157,34 @@ public class HealthcareProvidersService : IHealthcareProvidersService
 
         healthcareProvidersDto.HealthcareProviderId = id;
 
-        throw new NotImplementedException();
+        existingHCProvider.AddressIdStock = healthcareProvidersDto.AddressIdStock;
+        existingHCProvider.HealthcareProviderId = healthcareProvidersDto.HealthcareProviderId;
+        existingHCProvider.HealthcareProviderName = healthcareProvidersDto.HealthcareProviderName;
+        existingHCProvider.ProviderName = healthcareProvidersDto.ProviderName;
+        existingHCProvider.ProviderTypeId = healthcareProvidersDto.ProviderTypeId;
+
+        await _healthcareProvidersRepository.UpdateAsync(existingHCProvider);
     }
 
-    public Task DeleteAsync(long id)
+    public async Task DeleteAsync(long id)
     {
-        throw new NotImplementedException();
+        var existingHcProvider = await _healthcareProvidersRepository.GetByIdAsync(id);
+        
+        if (existingHcProvider == null) throw new NotFoundException($"Healthcare Provider with id {id} not found");
+
+        var existingAddressStock = await _addressStockRepository.GetByIdAsync(existingHcProvider.AddressIdStock);
+
+        await _healthcareProvidersRepository.DeleteAsync(id);
+        
+        if (existingAddressStock != null) await _addressStockRepository.DeleteAsync(existingAddressStock.AddressIdStock);
     }
 
-    public Task<PagedResult<HealthcareProvidersDTO>> SearchAsync(string? healthcareProviderName, long? providerTypeId, long? addressIdStock, int page, int pageSize, string sortBy, string sortDir)
+    public async Task<PagedResult<HealthcareProvidersDTO>> SearchAsync(string? healthcareProviderName, long? providerTypeId, long? addressIdStock, int page, int pageSize, string sortBy, string sortDir)
     {
-        throw new NotImplementedException();
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+        if (pageSize > 100) pageSize = 100;
+        
+        var (items, total) = await _healthcareProvidersRepository.SearchAsync()
     }
 }
